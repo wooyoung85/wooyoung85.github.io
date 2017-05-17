@@ -8,4 +8,4 @@ share: true
 ---
 
 안녕하세요. GitHub Blog 시작합니다~^^
-![작은 이미지](./images/github.png)
+![작은 이미지](/images/github.png)
