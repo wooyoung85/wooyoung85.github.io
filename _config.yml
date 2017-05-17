@@ -1,25 +1,22 @@
-# # # # # # # # # # # # #
-#   K i k o - p l u s   #
-# # # # # # # # # # # # #
 
 # Basic
 name:               "WooYoung Blog"
 
 author:
-  facebook:         your-id
-  youtubeUser:      your-id
-  youtubeChannel:   your-id
-  twitter:          your-id
-  github:           your-id
-  stackoverflow:    your-id
-  quora:            your-id
-  linkedin:         your-id
-  pinterest:        your-id
-  googlePlus:       your-id
-  instagram:        your-id
-  reddit:           your-id
-  medium:           your-id
-  tumblr:           your-id
+  facebook:         wooyoung.seo.589
+  #youtubeUser:      your-id
+  #youtubeChannel:   your-id
+  #twitter:          your-id
+  #github:           wooyoung85
+  #stackoverflow:    your-id
+  #quora:            your-id
+  #linkedin:         your-id
+  #pinterest:        your-id
+  #googlePlus:       your-id
+  #instagram:        your-id
+  #reddit:           your-id
+  #medium:           your-id
+  #tumblr:           your-id
   email:            awoodongs@gmail.com
 
 copyright:
