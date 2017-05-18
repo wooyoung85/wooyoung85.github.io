@@ -123,7 +123,10 @@ Method Request에 ARN 정보를 보실 수 있습니다.
 
 ---
 #####참고한 블로그
-[AWS Lambda와 API Gateway로 Slack Bot 만들기](http://www.usefulparadigm.com/2016/04/06/creating-a-slack-bot-with-aws-lambda-and-api-gateway/)
-[AWS API GatewayでContent-Type:application/x-www-form-urlencoded のPOSTデータを受け取り JSONに変換する](http://qiita.com/durosasaki/items/83af014aa85a0448770e)
-[AWS Lambda를 이용해서 GitHub과 Slack 연동하기](http://blog.weirdx.io/post/27097)
+[AWS Lambda와 API Gateway로 Slack Bot 만들기](http://www.usefulparadigm.com/2016/04/06/creating-a-slack-bot-with-aws-lambda-and-api-gateway/)  
+
+[AWS API GatewayでContent-Type:application/x-www-form-urlencoded のPOSTデータを受け取り JSONに変換する](http://qiita.com/durosasaki/items/83af014aa85a0448770e)  
+
+[AWS Lambda를 이용해서 GitHub과 Slack 연동하기](http://blog.weirdx.io/post/27097)  
+
 [[AWS]서버없이 Lambda와 API Gateway로 서버API 만들기](http://gun0912.tistory.com/59)
