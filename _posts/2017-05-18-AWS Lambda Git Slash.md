@@ -38,13 +38,13 @@ AWS Lambda와 API GateWay를 활용한 Slack의 Slash 명령어를 만들어 보
 
 ![post_1_6](/images/post_1_6.png)
 - command 명 입력   <sup>ex) /wiki</sup>
-- <u>**Request URL은 AWS API Gateway가 뱉어내는 URL을 나중에 입력**</u>
+- **<u>Request URL은 AWS API Gateway가 뱉어내는 URL을 나중에 입력</u>**
 - Short Description은 짧게 설명을 샤샤샥 작성
 - Usage Hint   <sup>ex) [Search Text]</sup>
 
 
 ## AWS Lambda 생성
-######아마존 클라우드 프리티어 사용 중입니다~
+###### 아마존 클라우드 프리티어 사용 중입니다~
 아마존 클라우드 로그인 후 대쉬보드 화면으로 GO GO
 
 ![post_1_7](/images/post_1_7.png)
@@ -123,9 +123,11 @@ AWS Lambda는 혼자서는 어떤 기능을 하기 힘들기 때문에 이제 AP
 <code>Slack에서 명령어를 호출하면 "application/x-www-form-urlencoded" Content-Type을 사용하여 폼 post 방식 전송을 하기 때문에
 이를 JSON 형태로 변환하는 작업이 필요합니다.</code>
 
+**마지막으로 Actions 드롭다운박스를 클릭해서 Deploy API 해 주셔야 수정한 것들이 적용됩니다.**
+
 ## 연결
-Lambda와 API Gateway가 잘 생성됐으면 Resource Tree에서 방금 생성한 post Method를 클릭하면
-Method Request에 ARN 정보를 보실 수 있습니다.
+Lambda와 API Gateway가 잘 생성됐으면 맨 왼쪽 Tree에서 API >> Stages 에 가면
+Invoke URL 정보를 보실 수 있습니다.
 
 이 URL을 복사해서 아까 맨 처음에 Slack 명렁어 생성시 비워뒀던 Request URL에 채워넣고,
 Slack 채팅창으로 가서 생성한 명령어가 사용가능한지 확인 해 보시면 됩니다~
