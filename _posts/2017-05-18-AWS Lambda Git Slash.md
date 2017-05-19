@@ -1,3 +1,11 @@
+---
+layout: post
+title: "AWS Lambda를 활용한 Git Slash 명령어 생성"
+description: "AWS Lambda를 활용한 Git Slash 명령어 생성"
+date: 2017-05-17
+comments: true
+share: true
+---
 # AWS Lambda를 활용한 Git Slash 명령어 생성
 
 AWS Lambda와 API GateWay를 활용한 Slack의 Slash 명령어를 만들어 보려고 합니다.
