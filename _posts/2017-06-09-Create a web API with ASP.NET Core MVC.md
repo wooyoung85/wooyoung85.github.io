@@ -14,7 +14,7 @@ share: true
 >2. Docker 배포
 >3. MongoDB와 Web API 연결
 >4. 의존성 주입(DI)과 보안을 고려해서 Web API 다시 만들기
->5. UI만들기(VanilaJS나 AngularJS를 활용해서 만들 예정)
+>5. UI만들기(Node JS나 Angular JS를 활용해서 만들 예정)
 
 <br>
 
@@ -33,7 +33,7 @@ share: true
 - Web API 선택
 
 ![image_3](/images/post_2/3.png)
-- 솔루션 탐색기에 MVC형태 비슷하게(?) 프로젝트 구성이 되어 있는 것을 확인 후 `Ctrl + Shift + B` 솔루션 전체 빌드
+- 솔루션 탐색기에 MVC형태 비슷하게(Models 폴더 추가가 필요함) 프로젝트 구성이 되어 있는 것을 확인 후 `Ctrl + Shift + B` 솔루션 전체 빌드
 - 솔루션 밑에 생성된 프로젝트를 시작 프로젝트로 설정 후 `Ctrl + F5`로 디버깅 없이 시작
 
 ![image_4](/images/post_2/4.png)
