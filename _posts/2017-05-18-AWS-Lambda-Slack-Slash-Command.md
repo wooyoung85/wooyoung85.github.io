@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "AWS Lambda를 활용한 Git Slash 명령어 생성"
+title: "AWS Lambda를 활용한 Slack Slash 명령어 생성"
 description: "AWS 서버리스 프레임워크 실습"
 date: 2017-05-17
 comments: true
