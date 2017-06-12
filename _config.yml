@@ -1,4 +1,4 @@
-
+﻿
 # Basic
 name:               "우영's Blog"
 
@@ -86,10 +86,5 @@ gems:
   - jekyll-seo-tag
   - jekyll-paginate
   - jekyll-admin
-  - jekyll-sitemap
-
-# Sitemap
-sitemap:
-    filename: "/sitemap.xml"
 
 exclude:            [vendor]

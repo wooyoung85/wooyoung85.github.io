@@ -5,6 +5,10 @@ description: "ASP.NET Web API with ASP.NET Core MVC "
 date: 2017-06-09
 comments: true
 share: true
+
+sitemap :
+  changefreq : weekly
+  priority : 1.0
 ---
 마이크로 서비스 구축 실습을 목표로 이것 저것 하나씩 연습해 보는 중입니다^^
 

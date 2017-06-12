@@ -5,6 +5,10 @@ description: "AWS 서버리스 프레임워크 실습"
 date: 2017-05-17
 comments: true
 share: true
+
+sitemap :
+  changefreq : weekly
+  priority : 1.0
 ---
 AWS Lambda와 API GateWay를 활용한 Slack의 Slash 명령어를 만들어 보려고 합니다.
 
