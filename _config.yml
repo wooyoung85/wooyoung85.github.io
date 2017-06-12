@@ -88,4 +88,8 @@ gems:
   - jekyll-admin
   - jekyll-sitemap
 
+# Sitemap
+sitemap:
+    filename: "/sitemap.xml"
+
 exclude:            [vendor]
