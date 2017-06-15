@@ -270,9 +270,9 @@ public IActionResult Delete(long id)
 - <mark>PUT</mark> 방식으로 설정
 - URL은 http://localhost:port/api/todo/<b>key</b> 아이디 값을 파라미터로 넘겨주는 방식으로 입력
 - 아래 코드 입력
-~~~json
+~~~ json
 {
-	"id": 1,
+    "id": 1,
     "name": "UpdateItem1",
     "isComplete": true
 }
@@ -284,8 +284,29 @@ public IActionResult Delete(long id)
 - URL은 http://localhost:port/api/todo/**key** 아이디 값을 파라미터로 넘겨주는 방식으로 입력<br>
 <br>
 
+---
+
+## GitHub 저장소에 소스코드 저장하기
+![image_14](/images/post_2/14.png)
+- 도구 > 확장 및 업데이트 에서 Online 항목 중 GitHub를 검색해서 GitHub Extension for Visual Studio를 설치합니다.
+
+![image_15](/images/post_2/15.png)
+- 설치가 완료되면 팀 탐색기에 GitHub 메뉴박스가 보이게 됩니다
+- GitHub 메뉴박스에서 Connet 버튼을 Click
+
+![image_16](/images/post_2/16.png)
+- GitHub 로그인
+
+![image_17](/images/post_2/17.png)
+- 로그인이 되면 Create 버튼 Click (저장소 만들기)
+
+![image_18](/images/post_2/18.png)
+- 저장소 이름, 설명, Local PC에 소스 저장한 저장한 경로, gitignore(GitHub를 통해 관리 안 해도 되는 파일 설정) , License 등을 입력 후 Create
 
 ---
 **참고한 사이트** <br>
 [Create a web API with ASP.NET Core MVC and Visual Studio for Windows](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api)<br>
-[Introduction to Dependency Injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection)
+[Introduction to Dependency Injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection)<br>
+[Setting up and using GitHub in Visual Studio 2017](https://blogs.msdn.microsoft.com/benjaminperkins/2017/04/04/setting-up-and-using-github-in-visual-studio-2017/)
+
+
