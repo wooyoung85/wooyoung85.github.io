@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://wooyoung85.github.io/sitemap.xml
