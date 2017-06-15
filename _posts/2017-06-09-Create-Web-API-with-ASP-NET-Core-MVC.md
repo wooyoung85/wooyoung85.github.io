@@ -270,9 +270,9 @@ public IActionResult Delete(long id)
 - <mark>PUT</mark> 방식으로 설정
 - URL은 http://localhost:port/api/todo/<b>key</b> 아이디 값을 파라미터로 넘겨주는 방식으로 입력
 - 아래 코드 입력
-~~~json
+~~~ json
 {
-	"id": 1,
+    "id": 1,
     "name": "UpdateItem1",
     "isComplete": true
 }
@@ -285,6 +285,7 @@ public IActionResult Delete(long id)
 <br>
 
 ---
+
 ## GitHub 저장소에 소스코드 저장하기
 ![image_14](/images/post_2/14.png)
 - 도구 > 확장 및 업데이트 에서 Online 항목 중 GitHub를 검색해서 GitHub Extension for Visual Studio를 설치합니다.
@@ -305,4 +306,7 @@ public IActionResult Delete(long id)
 ---
 **참고한 사이트** <br>
 [Create a web API with ASP.NET Core MVC and Visual Studio for Windows](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api)<br>
-[Introduction to Dependency Injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection)
+[Introduction to Dependency Injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection)<br>
+[Setting up and using GitHub in Visual Studio 2017](https://blogs.msdn.microsoft.com/benjaminperkins/2017/04/04/setting-up-and-using-github-in-visual-studio-2017/)
+
+
