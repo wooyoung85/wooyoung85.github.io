@@ -34,9 +34,9 @@ Toolbox 설치를 완료하면 아래 3가지 아이콘이 보이게됩니다.<b
 - Default 가상머신 IP는 Docker Container에 접근할 때 필요하기 때문에 잘 기억해 두어야 합니다.<br>
 (혹시 까먹었다면  `docker-machine ip` 로 확인 가능)
 
-## 빠르게 Docker 컨테이너에 ASP.NET Core Web Application 실행
-#### .NET Core 설치된 컨테이너 실행하기
-~~~ docker
+## 빠르게 Docker 컨테이너에 ASP.NET Core Web Application 실행하기
+#### .NET Core 설치된 컨테이너 실행
+~~~
 $ docker run -it --name aspnetcore -p 5050:5000 microsoft/dotnet:latest
 ~~~
 > <b>run</b> : 이미지를 컨테이너로 실행 (run 명령어 실행 시 이미지를 내려받은 적이 없다면 이미지를 받은 후 컨테이너 실행)<br> 
@@ -50,7 +50,8 @@ $ docker run -it --name aspnetcore -p 5050:5000 microsoft/dotnet:latest
 ![image_3](/images/post_3/3.png)
 - 명령어를 실행하면 이미지를 다운(최초 한 번만) 받고 컨테이너에 접속
 
-<span style='color:orange'>(참고)</span>  `exit` 를 쳐서 빠져나갈 수 있는데, 이렇게 되면 컨테이너 실행이 중지된다. `Ctrl + p,q` 로 빠져나와야 컨테이너를 중지하지 않고 빠져나올 수 있다.
+<span style='color:orange'>(참고)</span><br>
+`exit` 를 쳐서 빠져나갈 수 있는데, 이렇게 되면 컨테이너 실행이 중지된다. `Ctrl + p,q` 로 빠져나와야 컨테이너를 중지하지 않고 빠져나올 수 있다.
 
 #### .NET Core Web Application 생성과 실행
 ~~~
@@ -64,6 +65,33 @@ dotnet new web
 ~~~
 > - Web 프로젝트 생성
 
+<span style='color:red'>**(중요)**</span><br>
+기본적으로 Kestrel(cross-platform web server for ASP.NET Core )은 `localhost`(loopback interface)에서 수신 대기하도록 설정되어 있어서 .Net Application이 Docker Container 안에서 실행되는 경우 Container 내부에서만 접근이 가능해진다.<br><br>
+이에 대한 해결책은 Program.cs에서 모든 IP Address에 대해 Listening 할 수 있도록 설정해 줘야 한다.
+
+~~~ diff
+public static void Main(string[] args)
+{
+    var host = new WebHostBuilder()
+        .UseKestrel()
+        .UseContentRoot(Directory.GetCurrentDirectory())
++        .UseUrls("http://*:5000")
+        .UseIISIntegration()
+        .UseStartup<Startup>()
+        .Build();
+
+    host.Run();
+}
+~~~
+<span style='color:orange'>(참고)</span>
+<pre>
+  apt-get update
+  apt-get install vim
+  vim Program.cs
+</pre>
+
+- 위 명령어를 통해 Docker Container에 vim 편집기를 설치하고 Program.cs 파일을 수정
+- vim 편집기 사용법은 구글링하면 많이 나옵니다~^^
 ~~~
 dotnet restore
 dotnet run
@@ -71,5 +99,66 @@ dotnet run
 > - Defendency 복원 (.NET Core에서는 Restore 명령어를 통해 프로젝트에 종속된 패키지를 복원함)<br>
 > - 웹사이트 실행
 
+![image_4](/images/post_3/4.png)
+- 웹사이트 실행이 성공하면 에러메세지 없이 수신 대기 중인 IP Address와 Port 번호가 보이게 됨<br>
+`Now listening on : http://*:5000` 
+
+#### 테스트
+![image_5](/images/post_3/5.png)
+- 가상머신의 IP(192.168.99.100)와 컨테이너의 5000 Port와 Mapping 된 5050 Port로 접속
+
+## 간편한 배포를 위한 DockerFile 작성하기
+DockerFile을 활용해서 배포를 하려면 아래와 같은 순서로 진행하면 된다.
+> 1. 가상머신에 GitHub 저장소 복제 
+> 2. 소스코드가 있는 폴더에서 <b>DockerFile</b> 생성
+> 3. DockerFile <b>build</b>해서 이미지 생성
+> 4. 생성된 이미지를 사용하여 Docker 컨테이너 <b>run</b>
+
+#### GitHub 저장소 복제
+~~~
+ git clone https://github.com/wooyoung85/TodoApi.git
+ cd TodoApi/TodoApi
+~~~
+- 가상머신에 저장소 복제 후 소스코드가 있는 폴더로 이동
+
+#### DockerFile 만들기
+~~~ dockerfile
+FROM microsoft/dotnet:1.1-sdk-projectjson
+
+COPY . /myapp
+WORKDIR /myapp
+
+RUN ["dotnet", "restore"]
+RUN ["dotnet", "build"]
+
+EXPOSE 5000/tcp
+ENV ASPNETCORE_URLS http://*:5000
+
+ENTRYPOINT ["dotnet", "run"]
+~~~
+- dotnet 설치는 microsoft/dotnet:1.1-sdk-projectjson 이미지를 사용
+- 컨테이너 내부에 애플리케이션 소스를 myapp폴더에 복사
+- myapp폴더를 작업 폴더로 설정
+- Defendency 복원하고 빌드
+- 가상머신에서 5000 포트를 노출시키도록 설정
+- 컨테이너에서 실행될 .Net Application에 환경 변수(ASPNETCORE_URLS)를 설정
+- 컨테이너가 시작되면 dotnet run명령 이 실행됨
+
+#### DockerFile 빌드하기
+~~~ docker
+$ docker build -t wooyoung85/todoapi
+~~~
+- 이미지를 생성하려면 Dockerfile을 사용하여 같은 폴더에서 명령을 실행
+
+#### 생성된 Image 사용하여 Docker RUN
+~~~ docker
+$ docker run -it wooyoung85/todoapi --name todoapi
+~~~
+- 컨테이너가 실행되면서 어플리케이션도 동시에 실행됨
+- http://192.168.99.100:5000/api/Todo 로 테스트
+
+<br>
+---
+**참고한 사이트** <br>
 [HOSTING .NET CORE ON LINUX WITH DOCKER - A NOOB'S GUIDE](http://blog.scottlogic.com/2016/09/05/hosting-netcore-on-linux-with-docker.html)<br>
 [DOCKERIZING AN ASP.NET CORE APPLICATION WITH GITHUB, DOCKER CLOUD AND AZURE](https://radu-matei.github.io/blog/aspnet-core-docker-azure/)<br>

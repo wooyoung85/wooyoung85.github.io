@@ -128,7 +128,7 @@ namespace TodoApi
 
 ## 컨트롤러 추가
 ![image_9](/images/post_2/9.png)
-- Controllers 폴더에서 우클릭 후 추가 > 새 항목 > MVC 컨트롤러 클래스 추가
+- Controllers 폴더에서 우클릭 후 추가 > 새 항목 > MVC 컨트롤러 클래스 추가 (MVC 컨트롤러 클래스명 : TodoController)
 - 아래 코드 입력
 
 ~~~cs
@@ -297,10 +297,15 @@ public IActionResult Delete(long id)
 - GitHub 로그인
 
 ![image_17](/images/post_2/17.png)
-- 로그인이 되면 Create 버튼 Click (저장소 만들기)
+- 솔루션 탐색기에서 솔루션에 우클릭 한 후 소스제어에 솔루션 추가 클릭
 
 ![image_18](/images/post_2/18.png)
-- 저장소 이름, 설명, Local PC에 소스 저장한 저장한 경로, gitignore(GitHub를 통해 관리 안 해도 되는 파일 설정) , License 등을 입력 후 Create
+- GitHub 탭에서 Get Started 버튼 클릭
+
+![image_19](/images/post_2/19.png)
+- 팀 탐색기에서 저장소 이름과 설명 부분 작성 후 Publish 하면 됨
+
+![image_20](/images/post_2/20.png)
 
 ---
 **참고한 사이트** <br>
