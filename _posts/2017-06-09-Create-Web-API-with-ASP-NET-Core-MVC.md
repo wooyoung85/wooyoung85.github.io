@@ -59,7 +59,7 @@ Web API 개발에 집중하기 위해서 DB와 연결하는 작업은 일단 Pas
 - 프로젝트에서 우클릭 후 추가 > 새 폴더 (폴더명 : *Models*)
 
 ![image_8](/images/post_2/8.png)
-- Models 폴더에서 우클릭 후 추가 > 클래스 추가
+- Models 폴더에서 우클릭 후 추가 > 클래스 추가 (클래스명 : TodoItem)
 - 아래 코드 입력
 
 ~~~cs
@@ -73,10 +73,9 @@ namespace TodoApi.Models
     }
 }
 ~~~
-
-![image_9](/images/post_2/9.png)
-- Models 폴더에서 우클릭 후 추가 > 클래스 추가
-- 아래 코드 입력
+- Models 폴더에서 우클릭 후 추가 > 클래스 추가 (클래스명 : TodoContext)
+- InMemory DB 사용을 위해 Microsoft.EntityFrameworkCore.DbContext를 상속 받는 Database Context 클래스 생성
+- 아래 코드 입력 
 
 ~~~cs
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +94,7 @@ namespace TodoApi.Models
     }
 }
 ~~~
-- InMemory DB 사용을 위해 Microsoft.EntityFrameworkCore.DbContext를 상속 받는 Database Context 클래스 생성
+
 
 ## Database Context 등록
 
