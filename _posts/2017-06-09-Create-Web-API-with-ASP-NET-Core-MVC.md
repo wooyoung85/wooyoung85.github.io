@@ -13,16 +13,16 @@ sitemap :
 마이크로 서비스 구축 실습을 목표로 이것 저것 하나씩 연습해 보는 중입니다^^
 
 
-**마이크로 서비스 실습 에정 순서**
+**마이크로 서비스 실습 예정 순서**
 >1. ASP.NET Core Web API Project 만들기
->2. Docker 배포
+>2. Docker로 배포하기
 >3. MongoDB와 Web API 연결
 >4. 의존성 주입(DI)과 보안을 고려해서 Web API 다시 만들기
 >5. UI만들기(Node JS나 Angular JS를 활용해서 만들 예정)
 
 <br>
 
-일단 이번 포스팅에서는 ASP.NET Web API 프로젝트를 만들어 보도록 하겠습니다.
+일단 이번 포스팅에서는 ASP.NET Web API를 만들어 보도록 하겠습니다.
 
 ## Project 생성
 ###### 저는 Visual Studio 2017 Community 버전을 사용하고 있습니다.
@@ -44,7 +44,7 @@ sitemap :
 - IIS Express를 통해 Web API가 실행되고, 작업을 따로 하지 않았기 때문에 위와 같이 나오게 됨
 
 ## InMemory DB 사용하기
-Web API 개발에 집중하기 위해서 DB와 연결하는 작업은 일단 Pass하고 EntityFramework에서 사용할 수 있는 InMemory DB를 사용하도록 하겠습니다.
+Web API 개발에 집중하기 위해서 DB와 연결하는 작업은 일단 넘어가고, EntityFramework에서 사용할 수 있는 InMemory DB를 사용하도록 하겠습니다.
 
 ![image_5](/images/post_2/5.png)
 - 도구 > NuGet 패키지 관리자 > 패키지 관리자 콘솔 에서 아래 명령어로 Install<br>
@@ -131,7 +131,7 @@ namespace TodoApi
 - Controllers 폴더에서 우클릭 후 추가 > 새 항목 > MVC 컨트롤러 클래스 추가 (MVC 컨트롤러 클래스명 : TodoController)
 - 아래 코드 입력
 
-~~~cs
+~~~ cs
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Models;
@@ -157,6 +157,7 @@ namespace TodoApi.Controllers
     }
 }
 ~~~
+- 컨트롤러에 `[Route("api/[controller]")]` 라우팅 관련 속성 추가
 - TodoController 클래스 생성자에 TodoContext를 주입하는 의존성 주입 기법 사용하였고,
 DB에 데이터가 없을 때 Name이 "Item1"인 데이터를 생성하게 함
 - 전역 변수로 생성한 Database Context(TodoContext)는 컨트롤러에 CRUD를 구현할 때 사용함
@@ -287,17 +288,16 @@ public IActionResult Delete(long id)
 
 ## GitHub 저장소에 소스코드 저장하기
 ![image_14](/images/post_2/14.png)
-- 도구 > 확장 및 업데이트 에서 Online 항목 중 GitHub를 검색해서 GitHub Extension for Visual Studio를 설치합니다.
+- 도구 > 확장 및 업데이트 에서 Online 항목 중 GitHub를 검색해서 GitHub Extension for Visual Studio를 설치
 
 ![image_15](/images/post_2/15.png)
-- 설치가 완료되면 팀 탐색기에 GitHub 메뉴박스가 보이게 됩니다
-- GitHub 메뉴박스에서 Connet 버튼을 Click
+- 설치가 완료되면 팀 탐색기에 보이게 되는 GitHub 메뉴박스에서 Connet 버튼을 Click
 
 ![image_16](/images/post_2/16.png)
 - GitHub 로그인
 
 ![image_17](/images/post_2/17.png)
-- 솔루션 탐색기에서 솔루션에 우클릭 한 후 소스제어에 솔루션 추가 클릭
+- 솔루션 탐색기로 가서 솔루션에 우클릭 한 후 소스제어에 솔루션 추가 클릭
 
 ![image_18](/images/post_2/18.png)
 - GitHub 탭에서 Get Started 버튼 클릭
