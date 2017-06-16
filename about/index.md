@@ -4,6 +4,7 @@ title: About Blog
 tags: [about, Jekyll, Kiko-plus]
 modified: 2017-06-16
 comments: true
+share: true
 ---
 
 
@@ -14,5 +15,5 @@ comments: true
 
 
 ## 블로그 구성
-> Jekyll 테마 중 한글 가독성이 뛰어난 [Kiko plus Theme](https://github.com/AWEEKJ/Kiko-plus)를 사용하여 구성하였습니다.
+> Jekyll 테마 중 한글 가독성이 뛰어난 [Kiko plus Theme](https://github.com/AWEEKJ/Kiko-plus)를 사용하여 구성하였습니다.<br>
 > 댓글 시스템은 Disqus를 사용하고 있습니다.
