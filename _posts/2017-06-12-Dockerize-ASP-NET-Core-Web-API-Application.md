@@ -66,7 +66,7 @@ dotnet new web
 > - Web 프로젝트 생성
 
 <span style='color:red'>**(중요)**</span><br>
-기본적으로 Kestrel(cross-platform web server for ASP.NET Core )은 `localhost`(loopback interface)에서 수신 대기하도록 설정되어 있어서 .Net Application이 Docker Container 안에서 실행되는 경우 Container 내부에서만 접근이 가능해진다.<br><br>
+기본적으로 Kestrel(cross-platform web server for ASP.NET Core )은 `localhost`(loopback interface)에서 수신 대기하도록 설정되어 있어서 .Net Application이 Docker Container 안에서 실행되는 경우 컨테이너 내부에서만 접근이 가능해진다.<br><br>
 이에 대한 해결책은 Program.cs에서 모든 IP Address에 대해 Listening 할 수 있도록 설정해 줘야 한다.
 
 ~~~ diff
@@ -96,8 +96,8 @@ public static void Main(string[] args)
 dotnet restore
 dotnet run
 ~~~
-> - Defendency 복원 (.NET Core에서는 Restore 명령어를 통해 프로젝트에 종속된 패키지를 복원함)<br>
-> - 웹사이트 실행
+- Defendency 복원 (.NET Core에서는 Restore 명령어를 통해 프로젝트에 종속된 패키지를 복원함)<br>
+- 웹사이트 실행
 
 ![image_4](/images/post_3/4.png)
 - 웹사이트 실행이 성공하면 에러메세지 없이 수신 대기 중인 IP Address와 Port 번호가 보이게 됨<br>
