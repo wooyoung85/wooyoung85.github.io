@@ -30,6 +30,6 @@ sitemap :
 | git checkout 브랜치 이름  | 다른 브랜치로 전환  |
 
 ---
-** 참고한 사이트 ** <br>
+**참고한 블로그** <br>
 [git - 간편 안내서](https://rogerdudler.github.io/git-guide/index.ko.html)
 
