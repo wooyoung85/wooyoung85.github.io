@@ -146,7 +146,7 @@ ENTRYPOINT ["dotnet", "run"]
 
 #### DockerFile 빌드하기
 ~~~ docker
-$ docker build -t wooyoung85/todoapi
+$ docker build -t wooyoung85/todoapi .
 ~~~
 - 이미지를 생성하려면 Dockerfile을 사용하여 같은 폴더에서 명령을 실행
 
