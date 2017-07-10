@@ -16,7 +16,7 @@ sitemap :
 
 ## 블로그 할 때 주로 사용하는 GitHub 명령어
 | 명령어 | 의미 |
-| :--- | :--- |
+|:----|:----|
 | git status | 커밋되지 않은 변경사항을 조회 |
 | git add * | 변경된 파일 모두 추가 |
 | git commit -m "comment" | 변경내용 확정 |
@@ -28,16 +28,6 @@ sitemap :
 | git log --oneline --graph --decorate --all | 모든 브랜치 커밋 이력 조회 |
 | git checkout 브랜치 이름 | 다른 브랜치로 전환 |
 
-| 상단1 | 상단2 | 상단3 |
-|:-----|:----:|-----:|
-| 셀1  | 셀2  | 셀3  |
-| 셀4  | 셀5  | 셀6  |
-|----
-| 셀1  | 셀2  | 셀3  |
-| 셀4  | 셀5  | 셀6  |
-|=====
-| 하단1   | 하단2 | 하단3 |
-
- ** 참고한 사이트 **
+** 참고한 사이트 **
 [git - 간편 안내서](https://rogerdudler.github.io/git-guide/index.ko.html)
 
