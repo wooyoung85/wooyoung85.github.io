@@ -22,10 +22,10 @@ sitemap :
 | git commit -m "comment" | 변경내용 확정 |
 | git push | 변경내용을 원격 서버로 올리기 |
 | git remote -v | 현재 리모트 저장소를 확인 |
-| git branch <브랜치 이름> | 브랜치 생성 |
-| git push origin <브랜치 이름> | 변경내용을 원격 서버로 올리기 |
-| git branch -d <브랜치 이름> | 브랜치 삭제 |
+| git branch 브랜치 이름 | 브랜치 생성 |
+| git push origin 브랜치 이름 | 변경내용을 원격 서버로 올리기 |
+| git branch -d 브랜치 이름 | 브랜치 삭제 |
 | git log --oneline --graph --decorate --all | 모든 브랜치 커밋 이력 조회 |
-| git checkout <브랜치 이름> | 다른 브랜치로 전환 |
+| git checkout 브랜치 이름 | 다른 브랜치로 전환 |
 
 
