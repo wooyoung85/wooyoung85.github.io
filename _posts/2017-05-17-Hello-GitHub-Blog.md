@@ -28,6 +28,16 @@ sitemap :
 | git log --oneline --graph --decorate --all | 모든 브랜치 커밋 이력 조회 |
 | git checkout 브랜치 이름 | 다른 브랜치로 전환 |
 
+| 상단1 | 상단2 | 상단3 |
+|:-----|:----:|-----:|
+| 셀1  | 셀2  | 셀3  |
+| 셀4  | 셀5  | 셀6  |
+|----
+| 셀1  | 셀2  | 셀3  |
+| 셀4  | 셀5  | 셀6  |
+|=====
+| 하단1   | 하단2 | 하단3 |
+
  ** 참고한 사이트 **
 [git - 간편 안내서](https://rogerdudler.github.io/git-guide/index.ko.html)
 
