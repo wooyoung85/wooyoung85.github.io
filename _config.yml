@@ -60,6 +60,10 @@ nav:
     url:            "/tags"
   - name:           "Github"
     url:            "https://github.com/wooyoung85"
+  - name:           "Work"
+    url:            "/works"
+  - name:           "Study"
+    url:            "/studys"
 
 # Sass
 sass:
