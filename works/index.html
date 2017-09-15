@@ -1,24 +1,24 @@
 ---
 layout: page
-title: Archive
+title: Work
 ---
 <div class="archive">
   <div class="archive-list">
-  {% if site.posts.size == 0 %}
+  {% if site.works.size == 0 %}
     <h2>No post found</h2>
   {% else %}
-  {% for post in site.posts %}
+  {% for work in site.works %}
     <div class="archive-list-post">
-      {% if post.link %}
-      <a href="{{ post.link }}">
+      {% if work.link %}
+      <a href="{{ work.link }}">
       {% else %}
-      <a href="{{ post.url | prepend: site.baseurl }}">
+      <a href="{{ work.url | prepend: site.baseurl }}">
       {% endif %}  
         <span class="archive-list-post-title">
-          {{ post.title }}
+          {{ work.title }}
         </span>
         <span class="archive-list-post-date">
-          <time>| {{ post.date | date_to_string }}</time>
+          <time>| {{ work.date | date_to_string }}</time>
         </span>
       </a>
     </div>
