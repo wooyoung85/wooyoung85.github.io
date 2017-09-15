@@ -8,6 +8,8 @@ require 'time'
 SOURCE = "."
 CONFIG = {
   'posts' => File.join(SOURCE, "_posts"),
+  'works' => File.join(SOURCE, "_works"),
+  'studys' => File.join(SOURCE, "_studys"),
   'drafts' => File.join(SOURCE, "_drafts"),
   'post_ext' => "md",
 }
