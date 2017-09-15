@@ -8,15 +8,15 @@ require 'time'
 SOURCE = "."
 CONFIG = {
   'posts' => File.join(SOURCE, "_posts"),
-  'works' => File.join(SOURCE, "_works"),
+  'drafts' => File.join(SOURCE, "_drafts"),
   'post_ext' => "md",
 }
 
-# Usage: rake work title="A Title" [date="2012-02-09"] [tags=[tag1,tag2]]
-desc "Begin a new post in #{CONFIG['works']}"
-task :work do
-  abort("rake aborted: '#{CONFIG['works']}' directory not found.") unless FileTest.directory?(CONFIG['works'])
-  title = ENV["title"] || "new-work"
+# Usage: rake post title="A Title" [date="2012-02-09"] [tags=[tag1,tag2]]
+desc "Begin a new post in #{CONFIG['posts']}"
+task :post do
+  abort("rake aborted: '#{CONFIG['posts']}' directory not found.") unless FileTest.directory?(CONFIG['posts'])
+  title = ENV["title"] || "new-post"
   tags = ENV["tags"] || "[]"
   slug = title.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   begin
@@ -25,23 +25,54 @@ task :work do
     puts "Error - date format must be YYYY-MM-DD, please check you typed it correctly!"
     exit -1
   end
-  filename = File.join(CONFIG['works'], "#{date}-#{slug}.#{CONFIG['post_ext']}")
+  filename = File.join(CONFIG['posts'], "#{date}-#{slug}.#{CONFIG['post_ext']}")
   if File.exist?(filename)
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
 
-  puts "Creating new works: #{filename}"
-  open(filename, 'w') do |work|
-    work.puts "---"
-    work.puts "layout: post"
-    work.puts "title: \"#{title.gsub(/-/,' ')}\""
-    work.puts 'description: ""'
-    work.puts "date: #{date}"
-    work.puts "tags: #{tags}"
-    work.puts "comments: true"
-    work.puts "---"
+  puts "Creating new post: #{filename}"
+  open(filename, 'w') do |post|
+    post.puts "---"
+    post.puts "layout: post"
+    post.puts "title: \"#{title.gsub(/-/,' ')}\""
+    post.puts 'description: ""'
+    post.puts "date: #{date}"
+    post.puts "tags: #{tags}"
+    post.puts "comments: true"
+    post.puts "---"
   end
-end # task :work
+end # task :post
+
+# Usage: rake draft title="A Title" [date="2012-02-09"] [tags=[tag1,tag2]]
+desc "Begin a new post in #{CONFIG['drafts']}"
+task :draft do
+  abort("rake aborted: '#{CONFIG['drafts']}' directory not found.") unless FileTest.directory?(CONFIG['drafts'])
+  title = ENV["title"] || "new-draft"
+  tags = ENV["tags"] || "[]"
+  slug = title.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+  begin
+    date = (ENV['date'] ? Time.parse(ENV['date']) : Time.now).strftime('%Y-%m-%d')
+  rescue => e
+    puts "Error - date format must be YYYY-MM-DD, please check you typed it correctly!"
+    exit -1
+  end
+  filename = File.join(CONFIG['drafts'], "#{date}-#{slug}.#{CONFIG['post_ext']}")
+  if File.exist?(filename)
+    abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+  end
+
+  puts "Creating new drafts: #{filename}"
+  open(filename, 'w') do |draft|
+    draft.puts "---"
+    draft.puts "layout: post"
+    draft.puts "title: \"#{title.gsub(/-/,' ')}\""
+    draft.puts 'description: ""'
+    draft.puts "date: #{date}"
+    draft.puts "tags: #{tags}"
+    draft.puts "comments: true"
+    draft.puts "---"
+  end
+end # task :draft
 
 desc "Install Jekyll Plugins"
 task :geminstall do
