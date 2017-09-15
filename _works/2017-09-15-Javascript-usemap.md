@@ -1,5 +1,5 @@
 ﻿---
-layout: work
+layout: post
 title: "Javascript usemap"
 description: "Javascript Usemap 사용법"
 date: 2017-09-15
