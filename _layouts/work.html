@@ -1,37 +1,28 @@
 ---
 layout: default
 ---
-<header>
-  <div class="header-title">
-    <a href="{{site.url}}{{site.baseurl}}">{{ site.name }}</a>
-  </div>
-</header>
-<div class="post">
-  <div class="post-title">{{ page.title }}</div>
-  <span class="post-date">
-    <time>{{ page.date | date_to_string }}</time>
-  </span>
-  <div class="post-tag">
-    <ul>
-      {% for tag in page.tags %}
-      <li>
-        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
-          <span>{{ tag }}</span>
-        </a>
-      </li>
-      {% unless forloop.last %}{% endunless %}
-      {% endfor %}
-    </ul>
-  </div>
+<div id="navbar" class="container">
+    <h5><a id="link-back" href="/">Main</a></h5>
+    {% include share.html %}
+</div>
 
-  {{ content }}
+<div id="cover" class="container"
+     {% if page.image %}style="background-image: url({{ page.image }});"{% endif %}>
+    <div>
+        <h1>{{ page.title | default: page.name }}</h1>
+        <p>All Posts in <strong>{{ page.name }}</strong></p>
+    </div>
+</div>
 
-  <!-- Disqus -->
-  {% if page.comments != false and site.disqus.id %}
-  <div class="post-disqus">
-      <section id="disqus_thread"></section>
-      {% include disqus.html %}
-  </div>
-  {% endif %}
-
+<div id="content" class="container">
+    <div id="tag-content" role="main">
+        <ul id="post-list">
+            {% for post in site.posts %}
+                {% if post.tags contains page.name %}
+                    {% include item.html %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% include pagination.html %}
+    </div>
 </div>
