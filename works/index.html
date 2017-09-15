@@ -1,0 +1,28 @@
+---
+layout: page
+title: Archive
+---
+<div class="archive">
+  <div class="archive-list">
+  {% if site.works.size == 0 %}
+    <h2>No post found</h2>
+  {% else %}
+  {% for work in site.works %}
+    <div class="archive-list-post">
+      {% if work.link %}
+      <a href="{{ work.link }}">
+      {% else %}
+      <a href="{{ work.url | prepend: site.baseurl }}">
+      {% endif %}  
+        <span class="archive-list-post-title">
+          {{ work.title }}
+        </span>
+        <span class="archive-list-post-date">
+          <time>| {{ work.date | date_to_string }}</time>
+        </span>
+      </a>
+    </div>
+  {% endfor %}
+  {% endif %}
+  </div>
+</div>
