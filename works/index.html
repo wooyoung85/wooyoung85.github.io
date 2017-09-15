@@ -7,18 +7,18 @@ title: Work
   {% if site.works.size == 0 %}
     <h2>No post found</h2>
   {% else %}
-  {% for work in site.works %}
+  {% for post in site.works %}
     <div class="archive-list-post">
       {% if work.link %}
-      <a href="{{ work.link }}">
+      <a href="{{ post.link }}">
       {% else %}
-      <a href="{{ work.url | prepend: site.baseurl }}">
+      <a href="{{ post.url | prepend: site.baseurl }}">
       {% endif %}  
         <span class="archive-list-post-title">
-          {{ work.title }}
+          {{ post.title }}
         </span>
         <span class="archive-list-post-date">
-          <time>| {{ work.date | date_to_string }}</time>
+          <time>| {{ post.date | date_to_string }}</time>
         </span>
       </a>
     </div>
