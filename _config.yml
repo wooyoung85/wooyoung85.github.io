@@ -71,6 +71,11 @@ sass:
   style:            :compressed
 
 # Scopes
+collections:
+  works:
+    output: true
+    permalink: /works/:path/
+
 defaults:
   -
     scope:
