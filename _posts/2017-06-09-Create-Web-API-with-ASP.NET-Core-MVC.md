@@ -3,7 +3,7 @@ layout: post
 title: "ASP.NET Core Web API Project 만들기"
 description: "ASP.NET Web API with ASP.NET Core MVC "
 date: 2017-06-09
-tags: [ASP.NET, Micro Service, ASP.NET Core Web API]
+tags: [asp.net, micro service, web api]
 comments: true
 share: true
 
