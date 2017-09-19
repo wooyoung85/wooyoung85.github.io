@@ -3,6 +3,7 @@ layout: post
 title: "Hello GitHub Blog"
 description: "GitHub Blog 나도 한 번 해보자."
 date: 2017-05-17
+tags: [git명령어]
 comments: true
 share: true
 

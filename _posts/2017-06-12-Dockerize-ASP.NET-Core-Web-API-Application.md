@@ -3,6 +3,7 @@ layout: post
 title: "Docker로 ASP.NET Core Web API 배포하기"
 description: "Dockerize ASP.NET Core Web API Application"
 date: 2017-06-12
+tags: [Docker, ASP.NET Web API, DockerFile]
 comments: true
 share: true
 
