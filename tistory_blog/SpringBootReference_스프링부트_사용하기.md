@@ -177,3 +177,94 @@
 
     }
     ```
+
+## 15. Configuration Classes
+- 스프링 부트는 Java 기반 설정 파일을 선호한다.
+- XML 기반의 `SpringApplication` 사용도 가능하긴하지만, 주된 설정파일(primary source)은 단일 `@Configuration` 클래스로 구성하는 것을 추천한다.(Java 기반 설정 파일을 기본으로 하고 XML이나 properties 기반의 설정 파일을 끌어다 쓰는 방식을 추천)
+- 보통 `main` 메서드를 정의하고 있는 클래스가 primary `@Configuration` 어노테이션을 붙일 수 있는 좋은 후보이다.
+> XML을 사용한 많은 스프링 설정파일 예제들이 인터넷 상에 돌아다니고 있다. 가능하다면 항상 자바 기반의 설정 파일을 사용하는걸 시도해라. `Enable*` 어노테이션으로 찾는 것이 좋은 시작점이 될 수 있다.
+
+## 15.1 추가적인 Configuration Classes 불러오기
+- 모든 `@Configuration` 을 단일 클래스에 넣을 필요는 없다.
+- `@Import` 어노테이션을 사용하여 추가적인 설정 클래스들을 불러올 수 있다.
+- 또는 `@ComponentScan` 을 사용하여 `@Configuration` 클래스들을 포함한 모든 스프링 컴포넌트들을 자동으로 읽어들이게 할 수 있다. 
+
+## 15.2 XML 설정 불러오기
+- XML 기반의 설정을 반드시 사용해야 하는 경우 `@Configuration` 클래스로 시작하는 것이 좋다.(Java 기반 설정 파일을 기본으로 하는 걸 추천하고 있음)
+- XML 기반의 설정 파일을 로드하기 위해서 `@ImportResource` 어노테이션을 사용할 수 있다.
+
+## 16. Auto-configuration
+- 스프링 부트 auto-configuration 은 자동으로 사용자가 추가한 종속성을 기반으로 스프링 어플리케이션을 구성하는 것을 시도한다.
+- 예를 들면, `HSQLDB` 가 classpath에 있고(dependency 추가) 데이터베이스 연결 bean을 수동으로 구성하지 않았다면 스프링 부트가 in-memory 데이터베이스를 자동으로 설정한다.
+- `@EnableAutoconfiguration` 또는 `@SpringBootApplication` (@EnableAutoConfiguration, @Configuration, @ComponentScan 포함하고 있음) 어노테이션을 `@Configuration` 클래스들 중 하나에 추가하여 auto-configuration을 사용해야 한다.
+> `@SpringBootApplication` 또는 `@EnableAutoConfiguration` 어노테이션은 하나만 등록해야 한다. 일반적으로 주요(primary) `@Configuration` 클래스에만 둘 중 하나를 추가하는 것이 좋다.
+
+## 16.1 점차적으로 Auto-configuration으로 대체
+- Auto-configuration은 비 침투적이다.(필수요소는 아니다)
+- 어느시점이 되면 auto-configuration의 특정 부분을 사용자가 직접 설정을 정의하기 시작할 수 있다. 예를 들어, `DataSource` bean을 직접 추가한다면 기본 내장된 데이터베이스 더 이상 자동으로 등록되지 않는다.
+- 현재 어떤 auto-configuration이 왜 적용됐는지 보고 싶다면 어플리케이션을 시작할 때 `--debug` 스위치를 켜고 실행하면 된다. 그렇게 하면 core loggers의 선택에 대한 디버그 로그가 활성화 되고 콘솔에 conditions report가 기록된다.
+
+## 16.2 특정 Auto-configuration Classes 비활성화 하기
+- auto-configuration classes가 적용될 필요가 없다면 `@EnableAutoConfiguration` 의 exclude 속성을 사용할 수 있다.
+```java
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.boot.autoconfigure.jdbc.*;
+import org.springframework.context.annotation.*;
+
+@Configuration
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+public class MyConfiguration {
+}
+```
+
+- 클래스가 classpath에 없다면 `excludeName` 속성을 사용하고 완전한 이름을 지정해야 한다.
+- 마지막으로 `spring.autoconfigure.exclude` 속성을 사용하여 제외할 auto-configuration classes 리스트를 컨트롤 할 수 있다.
+> 어노테이션이나 속성을 사용해서 제외 항목을 정의할 수 있다.
+
+## 17. 스프링 Bean과 의존성 주입
+- bean과 주입된 종속성들을 정의하기 위해 모든 표준 스프링 프레임워크 기술을 자유롭게 사용할 수 있다.
+- 간단히 말하자면, `@ComponentScan` (bean을 찾기 위해) 쓰는 것과 `@Autowired` (생성자 주입을 위해) 를 쓰는 것을 자주 본다.
+- 위에서 제안한대로 코드를 구조화 했다면(root package 밑에 application 클래스를 두었다면) arguments 없이 `@ComponentScan` 을 추가할 수 있다.
+- 어플리케이션 컴포넌트들 모두(`@Component`, `@Service`, `@Repository`, `@Controller` etc.) 자동으로 스프링 Bean에 등록된다.
+- 아래 예제는 `RiskAssessor` 빈을 얻기위해 생성자 주입을 사용하는 `@Service` 빈을 보여주고 있다.
+```java
+package com.example.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DatabaseAccountService implements AccountService {
+
+	private final RiskAssessor riskAssessor;
+
+	@Autowired
+	public DatabaseAccountService(RiskAssessor riskAssessor) {
+		this.riskAssessor = riskAssessor;
+	}
+
+	// ...
+
+}
+```
+- 아래와 같이 생성자가 하나라면 `@Autowired`를 생략할 수 있다.
+```java
+@Service
+public class DatabaseAccountService implements AccountService {
+
+	private final RiskAssessor riskAssessor;
+
+	public DatabaseAccountService(RiskAssessor riskAssessor) {
+		this.riskAssessor = riskAssessor;
+	}
+
+	// ...
+
+}
+```
+> 생성자 주입을 사용하면 `riskAssessor` 필드가 `final` 이 표시되어 이후에 변경될 수 없음을 알 수 있다.
+
+## 참고자료
+[![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
+
+[![스프링 부트 2.0 Day 4. @SpringBootApplication과 XML 빈 설정 파일 사용하기](http://img.youtube.com/vi/jftcS1BQ_0g/0.jpg)](https://www.youtube.com/watch?v=jftcS1BQ_0g) 스프링 부트 2.0 Day 4. @SpringBootApplication과 XML 빈 설정 파일 사용하기
