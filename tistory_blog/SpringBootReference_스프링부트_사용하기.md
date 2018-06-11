@@ -1,7 +1,6 @@
 > 스프링 부트 레퍼런스 문서 중 Part III. Using Spring Boot를 보면서 번역 및 정리를 한 문서 입니다.  
 > 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 참고하시기 바랍니다.
 
-
 ## 13. Build System
 - 종속성 관리를 지원하는 Build System을 선택하는 것을 강력하게 추천한다.
 - 이런 Build System은 "Maven Central" 저장소에 게시된 아티팩트를 사용할 수 있다.
@@ -262,7 +261,54 @@ public class DatabaseAccountService implements AccountService {
 
 }
 ```
-> 생성자 주입을 사용하면 `riskAssessor` 필드가 `final` 이 표시되어 이후에 변경될 수 없음을 알 수 있다.
+> 생성자 주입 방식을 사용하면서 `riskAssessor` 필드에 `final` 을 표시하여 이후에 변경될 수 없음을 알리는 방법을 확인해라.
+
+## 18. @SpringBootApplication 어노테이션 사용하기
+- 많은 스프링 부트 개발자들은 auto-configuration, component scan 그리고 "application class"에 추가 설정을 정의할 수 있는 것을 좋아한다.
+- 단독 `@SpringBootApplication` 어노테이션을 사용하여 아래 3가지 기능을 사용할 수 있다.
+  + `@EnableAutoConfiguration` : 스프링 부트의 auto-configuration 메카니즘을 활성화 한다.
+  + `@ComponentScan` : 어플리케이션 클래스가 위치한 package에서 `@Component` 어노테이션이 달린 클래스들을 스캔하는 기능을 활성화 한다.
+  + `@Configuration` : 추가 빈을 컨텍스트에 등록하거나 추가 구성 클래스를 불러올 수 있다.
+
+- 아래 예제처럼 `@SpringBootApplication` 어노테이션은 `@Configuration`, `@EnableAutoConfiguration`, `@ComponentScan` 을 사용하는 것과 같다. (사람들이 위 3개 어노테이션을 함께 많이 써서 묶어버렸다고 한다.)
+```java
+package com.example.myapplication;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+}
+```
+> `@SpringBootApplication` 은 `@EnableAutoConfiguration`과 `@ComponentScan`의 속성을  커스터마이징 하는 별칭을 제공한다.
+
+> - 위 3가지 기능이 필수는 아니고 하나의 어노테이션을 대체하도록 선택할 수 있다.  
+ 예를 들어, 어플리케이션에서 컴포넌트 scan을 하지 않을 수 있다. (@ComponentScan 어노테이션을 @Import 어노테이션으로 대체)
+>```java
+>package com.example.myapplication;
+>
+>import org.springframework.boot.SpringApplication;
+>import org.springframework.context.annotation.ComponentScan
+>import org.springframework.context.annotation.Configuration;
+>import org.springframework.context.annotation.Import;
+>
+>@Configuration
+>@EnableAutoConfiguration
+>@Import({ MyConfig.class, MyAnotherConfig.class })
+>public class Application {
+>
+>	public static void main(String[] args) {
+>			SpringApplication.run(Application.class, args);
+>	}
+>
+>}
+>```
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
