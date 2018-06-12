@@ -2,8 +2,7 @@
 > 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 참고하시기 바랍니다.
 
 ## 13. Build System
-- 종속성 관리를 지원하는 Build System을 선택하는 것을 강력하게 추천한다.
-- 이런 Build System은 "Maven Central" 저장소에 게시된 아티팩트를 사용할 수 있다.
+- 종속성 관리를 지원하고 "Maven Central" 저장소에 게시된 아티팩트를 사용할 수 있는 Build System을 선택하는 것이 좋다.
 - Maven이나 Gradle을 선택하는걸 추천함
 - Ant같은 다른 Build System도 사용 가능하지만 잘 지원되지는 않음
 
@@ -22,7 +21,7 @@
     + 종속성 관리 부분(spring-boot-dependencies pom에서 상속받은)은 일반적인 종속성들의 버전을 관리하고 사용자 소유의 pom을 사용할 때 종속성들의 version tag를 생략할 수 있게 해 준다.
     + 합리적인 자원 필터링
     + 합리적인 plugin 구성(exec plugin, Git commit ID, and shade)
-    + profile-specific files (for example, application-dev.properties and application-dev.yml) 포함하여 `application.properties`과 `application.yml` 에 대한 합리적인 자원 필터링
+    + profile-specific files (예를 들면, application-dev.properties and application-dev.yml) 포함하여 `application.properties`과 `application.yml` 에 대한 합리적인 자원 필터링
  - 참고로 `application.properties`과 `application.yml` 파일은 스프링 스타일 placeholders `${...}` 를 사용하기 때문에, 메이븐 필터링이 `@..@` 을 사용하도록 변경되었다. (이를 재정의 하고 싶으면 메이븐 속성 중 `resource.delimiter`를 셋팅하면 된다.)
 
 ### 13.2.1 Starter Parent 상속하기
@@ -309,6 +308,44 @@ public class Application {
 >
 >}
 >```
+
+## 19. 어플리케이션 실행하기
+- 어플리케이션을 jar 로 패키징하고 내장 HTTP 서버를 사용하는 가장 큰 장점 중에 하나는 어느곳에서나 어플리케이션을 실행할 수 있다는 점이다.
+- 스프링 부트 어플리케이션 디버깅도 쉽다.
+- 특정 IDE 플러그인이나 확장 기능이 필요 없다.
+> 이번 section에서는 오직 jar 파일 기반의 패키징을 다루게 된다. 어플리케이션을 war 파일로 패키징할 경우, 당신은 서버와 IDE 문서를 참조해야만 한다.
+
+## 19.1 IDE에서 실행
+- IDE에서 간단한 자바 어플리케이션처럼 스프링 부트 어플리케이션을 실행할 수 있다. 그러나 먼저 프로젝트 불러오기부터 진행해야 한다.
+- 불러오기(Import) 단계는 당신의 IDE와 빌드 시스템에 따라 다르다.
+- 대부분의 IDE는 메이븐 프로젝트를 직접 가져올 수 있다.  
+예를 들면, 이클립스 사용자들은 `File`메뉴에서 `Import` → `Existing Maven Projects` 를 선택하여 메이븐 프로젝트를 불러올 수 있다.
+- IDE에서 프로젝트를 직접 불러올 수 없다면 빌드 플러그인을 사용하여 IDE 메타 데이터를 생성할 수 있다. Maven은 이클립스와 인텔리J 아이디어 용 플러그인이 포함되어 있고 Gradle은 다양한 IDE 용 플러그인을 제공하고 있다.
+
+> 급하게 웹 어플리케이션을 두번 실행한다면, "Port already in use" 에러를 보게 된다. STS 사용자들은 `Run` 버튼 대신 `Relaunch` 버튼을 사용하여 기존 인스턴스가 닫혀 있는지 확인할 수 있다.
+
+## 19.2 패키징 된 어플리케이션 실행하기
+- 실행가능한 jar 파일을 만들기 위해 스프링 부트 Maven 혹은 Gradle 플러그인을 사용하고 있다면, `java -jar` 를 사용하여 어플리케이션을 실행할 수 있다.
+```console
+$ java -jar target/myapplication-0.0.1-SNAPSHOT.jar
+```
+- 원격 디버깅 지원을 사용하도록 설정한 상태에서 패키징 된 어플리케이션의 실행이 가능하다. 아래와 같이 하면 패키징 된 어플리케이션에 디버거를 붙일 수 있다.
+```console
+$ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
+       -jar target/myapplication-0.0.1-SNAPSHOT.jar
+```
+
+## 19.3 메이븐 플러그인 사용하기
+- 스프링 부트 메이븐 플러그인이 포함하고 있는 `run`의 목표는 어플리케이션을 신속하고 정속하게 컴파일하고 실행하는데 있다.
+- IDE에서와 마찬가지로 어플리케이션은  분리된 형태로 실행된다.
+- 아래 예제는 스프링 부트 어플리케이션을 실행하기 위한  전형적인 메이븐 명령어이다.
+```console
+$ mvn spring-boot:run
+```
+- `MAVEN_OPTS` 환경 변수도 사용할 수 있다.
+```console
+$ export MAVEN_OPTS=-Xmx1024m
+```
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
