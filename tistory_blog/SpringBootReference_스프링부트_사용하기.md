@@ -336,8 +336,8 @@ $ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
 ```
 
 ## 19.3 메이븐 플러그인 사용하기
-- 스프링 부트 메이븐 플러그인이 포함하고 있는 `run`의 목표는 어플리케이션을 신속하고 정속하게 컴파일하고 실행하는데 있다.
-- IDE에서와 마찬가지로 어플리케이션은  분리된 형태로 실행된다.
+- 스프링 부트 메이븐 플러그인이 포함하고 있는 `run`의 목표는 어플리케이션을 신속하고 정확하게 컴파일하고 실행하는 것이다.
+- IDE에서와 마찬가지로 어플리케이션은 분리된 형태로 실행된다.
 - 아래 예제는 스프링 부트 어플리케이션을 실행하기 위한  전형적인 메이븐 명령어이다.
 ```console
 $ mvn spring-boot:run
@@ -346,6 +346,41 @@ $ mvn spring-boot:run
 ```console
 $ export MAVEN_OPTS=-Xmx1024m
 ```
+
+## 19.5 Hot Swapping
+- 스프링 부트 어플리케이션은 일반 자바 어플리케이션이 때문에 JVM hot-swapping을 즉시 실행 할 수 있습니다.  (Hot Swapping이란? 실행을 중단하지 않고 프로그램의 실행 코드를 변경하는 기능)
+- JVM hot swapping은 대체할 수 있는 바이트코드로 다소 제한된다.
+- 좀 더 완벽한 솔루션을 위해선 [JRebel](https://zeroturnaround.com/software/jrebel/) 을 사용할 수 있다.
+- `spring-boot-devtools` 모듈은 빠르게 어플리케이션을 재시작하는 지원한다. 
+- 자세한 내용은 [Chapter 20. Developer Tools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html) 에서 볼 수 있다.
+
+## 20. Developer Tools
+- 스프링 부트는 좀 더 쾌적하게 개발할 수 있게 해주는 추가적인 도구들이 포함되어 있다.
+- `spring-boot-devtools` 모듈은 모든 프로젝트에 포함될 수 있고 개발 시에 유용한 추가적인 기능을 제공한다.
+- devtools 지원을 포함하기 위해선, 아래와 같이 의존성을 추가하면 된다.  
+- **Maven**
+    ```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+    ```
+> - 완전히 패키징 된 어플리케이션을 실행할 경우 개발자 도구는 자동으로 비활성화 됩니다.
+> - `java -jar` 로 실행되거나 특정 클래스로더로 시작되는 경우 운영 모드의 어플리케이션으로 인식된다.
+> - 메이븐의 optional하게 의존성 플래그 지정하기 또는 Gradle의 `compileOnly` 를 사용하는 것은 프로젝트를 의존하는 다른 모듈에 devtools이 추이적으로 적용되지 않도록  방지하는 가장 좋은 방법이다.  
+*(spring-boot-devtools 사용 중인 A프로젝트를 B프로젝트가 의존하여 사용하는 경우 B프로젝트까지 spring-boot-devtools가 적용되게 하지 않으려면 메이븐의 경우 `<optional>` 속성을 "true" 로 하면 된다.)*
+
+> 리패키징 된 아카이브에는 기본적으로 devtools가 포함되어 있지 않다. 원격 devtools 기능을 사용하기 원한다면(원격 디버깅을 하고 싶다면), 빌드 속성 중 `excludeDevtools` 을 비활성화해야 한다. 이 속성은 Maven과 Gradle 모두 지원한다.
+
+## 20.1 Property Defaults
+- 스프링 부트에서 지원하는 몇몇 라이브러리는 성능을 향상시키기 위해 cache를 사용합니다. 예를 들어, [template engines](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-template-engines) 은 반복적으로 템플릿 파일을 parsing 하는 것을 방지하기 위해 컴파일 된 템플릿들을 cache한다.
+- 스프링 MVC는 정적 리소스들을 전달할 때 response에 HTTP cashing 헤더를 추가할 수 있다.
+- cashing은 운영환경에선 아주 유용하지만, 개발하는 동안에는 생산성이 저하시킨다. cashing을 하게 되면 어플리케이션에 방금 변경된 내용을 볼 수 없다. 이런 이유로 spring-boot-devtools는 기본적으로 cashing 옵션을 비활성화 한다.
+- Cache 옵션은 `application.properties` 파일의 설정에 의해 구성된다. 예를 들어, Thymeleaf는 `spring.thymeleaf.cache` 속성을 제공한다.
+- 속성들을 수동으로 셋팅하기 보다, `spring-boot-devtools` 모듈이 자동으로 개발 시에 합리적인 구성을 적용하게끔 하는 것이 좋다.
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
