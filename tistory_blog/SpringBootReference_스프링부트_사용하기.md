@@ -414,7 +414,7 @@ $ export MAVEN_OPTS=-Xmx1024m
 > - 이클립스의 경우 수정된 파일을 저장할 때 classpath가 업데이트되고 재시작하게 된다.
 > - IntelliJ IDEA의 경우 프로젝트 빌드(`Build -> Build Project`)를 하면 동일한 효과를 낸다.
 
-> - forking이 활성화되어 있는 동안, DevTools가 제대로 동작하려면 어플리케이션 격리된 classloader가 필요하기 때문에 지원되는 빌드 플러그인(Maven, Gradle)을 사용하여 어플리케이션을 시작할 수도 있다.
+> - forking이 활성화되어 있는 동안, DevTools가 제대로 동작하려면 어플리케이션 격리된 classloader가 필요하기 때문에 지원되는 빌드 플러그인(Maven, Gradle)을 사용하여 어플리케이션을 시작할 수도 있다. (fork : 실행 프로세스를 분기해야하는지 여부를 나타내는 플래그)
 > - 기본적으로 Gradle과 Maven은 classpath에서 DevTools를 찾을 때 이를 수행한다.
 
 > - 자동 재시작은 LiveReload를 사용할 때 매우 잘 동작한다. (자세한 내용은 [See the LiveReload section](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-livereload) 참조)
@@ -455,8 +455,90 @@ spring.devtools.restart.exclude=static/**,public/**
 ```
 > 기본값을 유지하면서 제외항목을 추가하고 싶다면, `spring.devtools.restart.additional-exclude` 속성을 사용하면 된다.
 
+### 20.2.3 Watching Additional Paths
+- classpath에 없는 파일들이 변경될 때 어플리케이션을 restart하거나 reload해야 할 수 있다.
+- classpath에 없는 파일들의 변화를 감지하기 위해 추가적인 경로 설정은 `spring.devtools.restart.additional-paths` 속성을 사용하면 된다.
+- [위에서 설명한](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-restart-exclude) `spring.devtools.restart.exclude` 를 사용하여 추가 경로 아래의 변경 사항이 전체 재시작 할 지 live reload할 지를 제어할 수 있다.
+
+### 20.2.4 재시작 비활성화
+- 재시작 기능의 사용을 원하지 않는다면, `spring.devtools.restart.enabled` 속성을 사용하여 비활성화 할 수 있다.
+- 대부분의 경우에는, `application.properties` 파일에 이 속성을 설정한다.(그렇게 하면 classloader가 초기화 되더라도 파일 변경을 감지하지 않는다.)
+- 재시작 기능을 *completely* 하게 비활성화 해야 한다면(예:특정 라이브러리와 함께 동작하지 않기 때문에), `SpringApplication.run(…​)` 을 호출하기 전에 `System` 의 `spring.devtools.restart.enabled` 속성을 `false` 로 해야 한다.
+```java
+public static void main(String[] args) {
+	System.setProperty("spring.devtools.restart.enabled", "false");
+	SpringApplication.run(MyApp.class, args);
+}
+```
+### 20.2.5 Trigger File 사용하기
+- 변경된 파일을 지속적으로 컴파일하는 IDE로 작업한다면, 특정 시간에만 재시작으로 연결하는 것이 좋다. (이클립스의 경우인 듯)
+- 이렇게 하기 위해,  "trigger file" 을 사용할 수 있다. 이 파일은 실제로 재시작 연결을 check할 때 수정되어 있어야 하는 파일이다. (즉 특정 파일이 변경되었을 때만 재시작이 연결되도록 설정할 수 있다.)
+- 파일을 변경하면 check가 시작되고(재시작과 연결된 파일인지 아닌지 check) Devtools가 뭔가를 해야한다고 감지하는 경우에만 재시작이 일어난다.
+- trigger file을 사용하기 위해, trigger 파일 경로를 `spring.devtools.restart.trigger-file` 속성에 설정
+
+> 모든 프로젝트가 동일한 방식으로 작동하도록 `spring.devtools.restart.trigger-file` 의 설정을 [global setting](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-globalsettings) 으로 할 수 있다.
+
+### 20.2.6 재시작 Classloader 커스터마이징 하기
+- [Restart vs Reload](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-spring-boot-restart-vs-reload) 에서 설명했듯이, 재시작은 2개의 classloader로 구현되었다. 
+- 대부분의 어플리케이션에서, 이런 접근방식을 잘 동작한다. 하지만 가끔 classloading 이슈가 생길 수 있다.
+- 기본적으로, IDE상에 열려있는 프로젝트는 "restart" classloader로 로드되고, 일반 `.jar` 파일은 "base" classloader로 로드된다.
+- IDE상에 모든 모듈을 불러오지 않고 멀티 프로젝트 구조로 작업하는 경우(*A 모듈이 B모듈을 jar 파일 형태로 참조하는 경우*), 커스터마이징이 필요할 수 있다. 이를 위해 `META-INF/spring-devtools.properties` 파일을 생성할 수 있다.
+- `spring-devtools.properties` 파일은 `restart.exclude` 와 `restart.include` 로 시작하는 속성들을 담을 수 있다.
+- `include` 요소들은 "restart" classloader에다 끌어올려야 할 항목이고, `exclude` 요소들은 "base" classloader 로 밀어넣어야 하는 항목이다.
+- 속성의 값은 아래 예제와 같이 classpath에 적용되는 정규식 패턴이다.
+```
+restart.exclude.companycommonlibs=/mycorp-common-[\\w-]+\.jar
+restart.include.projectcommon=/mycorp-myproj-[\\w-]+\.jar
+```
+> 모든 속성의 key는 유일해야 한다. 속성은 `restart.include.` 혹은 `restart.exclude.` 로 시작해야만 한다.
+
+> classpath의 모든 `META-INF/spring-devtools.properties` 는 로드된다. 프로젝트 내부 또는 프로젝트가 사용하는 라이브러리들 안에 있는 파일들을 패키징 할 수 있다. (프로젝트가 사용하는 라이브러리 안에 들어 있는 `META-INF/spring-devtools.properties` 파일도 읽어들여서 패키징하는데 사용할 수 있다)
+
+### 20.2.7 Known Limitations
+- 재시작은 표준 `ObjectInputStream` 을 사용하여 역 직렬화 된 객체와는 잘 작동하지 않는다.
+- 데이터를 역 직렬화 해야만 한다면, `Thread.currentThread().getContextClassLoader()` 를 조합하여 스프링의 `ConfigurableObjectInputStream` 를 사용해야 할 것이다.
+- 불행하게도, 여러 제3자 라이브러리들은 context classloader를 고려하지 않고 역 직렬화를 한다. 어떤 문제를 발견한다면, 라이브러리 작성자에게 수정을 요청해야 한다.
+
+## 20.3 LiveReload
+- `spring-boot-devtools` 모듈은 리소스가 변경될 때 브라우저 새로고침을 trigger하는 내장 LiveReload 서버를 포함한다. 
+- LiveReload 브라우저 확장기능은 크롬, 파이어폭스, 사파리에서 자유롭게 사용 가능하다. [livereload.com](https://livereload.com/extensions/)
+- 어플리케이션 실행 시 LiveReload 서버 사용을 원하지 않는다면, `spring.devtools.livereload.enabled` 속성을 `false` 로 설정하면 된다.
+
+> 
+
+## 20.4 전역 설정
+- `$HOME` 폴더에 `.spring-boot-devtools.properties` 이름의 파일을 추가하여 전역 devtools 설정을 구성할 수 있다.(파일 이름은 "."으로 시작)
+- 이 파일에 추가된 모든 속성들은 시스템에서 devtools를 사용하는 모든 스프링 부트 어플리케이션에 적용된다. 예를 들면, 항상 trigger file을 사용하여 재시작 구성을 하려면 아래와 같이 속성을 추가하면 된다.
+#### ~/.spring-boot-devtools.properties. 
+```
+spring.devtools.reload.trigger-file=.reloadtrigger
+```
+
+## 20.5 Remote Applications
+- 스프링 부트 개발자 도구는 local 환경에만 적용되는 것은 아니다.
+- 어플리케이션을 원격으로 실행할 때 여러 기능을 사용할 수 있다.
+- 원격 기능은 opt-in 이다. 이 기능을 활성화 하려면 아래와 같이  `devtools` 가 패키징 된 아카이브에 포함되었는지 확인해야 한다.
+```xml
+<build>
+	<plugins>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<excludeDevtools>false</excludeDevtools>
+			</configuration>
+		</plugin>
+	</plugins>
+</build>
+```
+- 아래 예제와 같이 `spring.devtools.remote.secret` 속성을 성정해야 한다.
+```
+spring.devtools.remote.secret=mysecret
+```
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
 
 [![스프링 부트 2.0 Day 4. @SpringBootApplication과 XML 빈 설정 파일 사용하기](http://img.youtube.com/vi/jftcS1BQ_0g/0.jpg)](https://www.youtube.com/watch?v=jftcS1BQ_0g) 스프링 부트 2.0 Day 4. @SpringBootApplication과 XML 빈 설정 파일 사용하기
+
+[![스프링 부트 2.0 Day 5. spring-boot-devtools 그리고 릴로딩](http://img.youtube.com/vi/5BhWpx7RW-w/0.jpg)](https://www.youtube.com/watch?v=5BhWpx7RW-w) 스프링 부트 2.0 Day 5. spring-boot-devtools 그리고 릴로딩
