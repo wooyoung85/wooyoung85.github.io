@@ -22,7 +22,7 @@
     + 합리적인 자원 필터링
     + 합리적인 plugin 구성(exec plugin, Git commit ID, and shade)
     + profile-specific files (예를 들면, application-dev.properties and application-dev.yml) 포함하여 `application.properties`과 `application.yml` 에 대한 합리적인 자원 필터링
- - 참고로 `application.properties`과 `application.yml` 파일은 스프링 스타일 placeholders `${...}` 를 사용하기 때문에, 메이븐 필터링이 `@..@` 을 사용하도록 변경되었다. (이를 재정의 하고 싶으면 메이븐 속성 중 `resource.delimiter`를 셋팅하면 된다.)
+ - 참고로 `application.properties`과 `application.yml` 파일은 스프링 스타일 placeholders `${...}` 를 사용하기 때문에, 메이븐 필터링이 `@..@` 을 사용하도록 변경되었다. (이를 재정의 하고 싶으면 메이븐 속성 중 `resource.delimiter`를 설정하면 된다.)
 
 ### 13.2.1 Starter Parent 상속하기
 - `spring-boot-starter-parent`를 상속하여 프로젝트를 설정하기 위해서 아래와 같이 `parent`를 설정해야 한다.
@@ -380,7 +380,81 @@ $ export MAVEN_OPTS=-Xmx1024m
 - 스프링 MVC는 정적 리소스들을 전달할 때 response에 HTTP cashing 헤더를 추가할 수 있다.
 - cashing은 운영환경에선 아주 유용하지만, 개발하는 동안에는 생산성이 저하시킨다. cashing을 하게 되면 어플리케이션에 방금 변경된 내용을 볼 수 없다. 이런 이유로 spring-boot-devtools는 기본적으로 cashing 옵션을 비활성화 한다.
 - Cache 옵션은 `application.properties` 파일의 설정에 의해 구성된다. 예를 들어, Thymeleaf는 `spring.thymeleaf.cache` 속성을 제공한다.
-- 속성들을 수동으로 셋팅하기 보다, `spring-boot-devtools` 모듈이 자동으로 개발 시에 합리적인 구성을 적용하게끔 하는 것이 좋다.
+- 속성들을 수동으로 설정하기 보다, `spring-boot-devtools` 모듈이 자동으로 개발 시에 합리적인 구성을 적용하게끔 하는 것이 좋다.
+> devtools에 적용되는 전체 목록은 [DevToolsPropertyDefaultsPostProcessor](https://github.com/spring-projects/spring-boot/blob/v2.0.2.RELEASE/spring-boot-project/spring-boot-devtools/src/main/java/org/springframework/boot/devtools/env/DevToolsPropertyDefaultsPostProcessor.java) 를 참조
+> ```java
+> private static final Map<String, Object> PROPERTIES;
+>
+> static {
+> 	Map<String, Object> devToolsProperties = new HashMap<>();
+> 	devToolsProperties.put("spring.thymeleaf.cache", "false");
+> 	devToolsProperties.put("spring.freemarker.cache", "false");
+> 	devToolsProperties.put("spring.groovy.template.cache", "false");
+> 	devToolsProperties.put("spring.mustache.cache", "false");
+> 	devToolsProperties.put("server.servlet.session.persistent", "true");
+> 	devToolsProperties.put("spring.h2.console.enabled", "true");
+> 	devToolsProperties.put("spring.resources.cache.period", "0");
+> 	devToolsProperties.put("spring.resources.chain.cache", "false");
+> 	devToolsProperties.put("spring.template.provider.cache", "false");
+> 	devToolsProperties.put("spring.mvc.log-resolved-exception", "true");
+> 	devToolsProperties.put("server.servlet.jsp.init-parameters.development", "true");
+> 	devToolsProperties.put("spring.reactor.stacktrace-mode.enabled", "true");
+> 	PROPERTIES = Collections.unmodifiableMap(devToolsProperties);
+> }
+> ```
+
+## 20.2 자동 재시작
+- `spring-boot-devtools` 를 사용하는 어플리케이션은 classpath에 있는 파일이 변경될 때마다 자동으로 재시작 한다.
+- 자동 재시작은 코드 변경에 대한 매우 빠른 피드백 루프를 제공하기 때문에 IDE 상에서 작업할 때 유용한 기능이다.
+- 기본적으로 폴더가 가리키는 classpath 상에 있는 모든 항목들의 변화를 모니터링한다.
+- static 자산들과 view template들과 같은 특정 리소스들은 재시작 할 필요가 없다.
+> <span style="color:#cc180e">Triggering a restart</span>
+> - DevTools는 classpath 리소스들을 모니터링하기 때문에 재시작하는 유일한 방법은 classpath를 업데이트 하는 것이다.
+> - classpath를 업데이트하는 방법은 사용 중인 IDE에 따라 다르다.
+> - 이클립스의 경우 수정된 파일을 저장할 때 classpath가 업데이트되고 재시작하게 된다.
+> - IntelliJ IDEA의 경우 프로젝트 빌드(`Build -> Build Project`)를 하면 동일한 효과를 낸다.
+
+> - forking이 활성화되어 있는 동안, DevTools가 제대로 동작하려면 어플리케이션 격리된 classloader가 필요하기 때문에 지원되는 빌드 플러그인(Maven, Gradle)을 사용하여 어플리케이션을 시작할 수도 있다.
+> - 기본적으로 Gradle과 Maven은 classpath에서 DevTools를 찾을 때 이를 수행한다.
+
+> - 자동 재시작은 LiveReload를 사용할 때 매우 잘 동작한다. (자세한 내용은 [See the LiveReload section](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-livereload) 참조)
+> - JRebel을 사용한다면 동적 class reload를 위해 자동 재시작이 비활성화 된다.
+> - 다른 devtools 기능들(LiveReload와 property overrides 같은)은 계속 사용된다.
+
+> - DevTools는 재시작 하는 동안 어플리케이션을 닫기 위해  application context의 shutdown hook을 사용한다.
+> - shutdown hook을 비활성화 시키면(`SpringApplication.setRegisterShutdownHook(false)`) DevTools 재시작 기능이 올바르게 작동하지 않는다.
+
+> - classpath에 있는 항목들이 변경되었을 때 재시작 해야하는지 여부를 결정할 때 DevTools는 자동적으로 `spring-boot`, `spring-boot-devtools`, `spring-boot-autoconfigure`, `spring-boot-starter` 이름을 가진 프로젝트들을 무시하게 된다.
+
+> - DevTools는 `ApplicationContext` 에서 사용하는 `ResourceLoader` 를 커스터마이징 해야 한다.
+> - 어플리케이션에서 이미 제공한 경우에는 wrapping된다.
+> - 직접 `ApplicationContext` 에 있는 `getResource` 메서드를 재정의 하는 것은 지원하지 않는다.
+
+> <span style="color:#cc180e">Restart vs Reload</span>
+> - 스프링 부트가 제공하는 재시작 기술은 두 개의 classloader를 사용하여 작동한다.
+> - 바뀌지 않는 클래스들(예를 들어, 제3자 jar 파일들(라이브러리들))은 *base* classloader에 의해 로드된다.
+> - 활발하게 개발 중인 클래스들은 *restart* classloader에 의해 로드된다.
+> - 어플리케이션이 재시작할 때, *restart* classloader는 버려지고 새로운 classloader가 생성된다.
+> - 두 개의 classloader를 사용하는 방식은 *base* classloader가 이미 사용가능한 상태이고 채워진 상태이기 때문에 어플리케이션의 재시작이 일반적으로 "cold starts" 보다 빠르다.
+> - 재시작이 충분하게 빠르지 않거나 classloading 이슈가 생겼다면, ZeroTurnaround사의 JRebel을 사용하여 reloading하는 방법을 고려해 볼 수 있다.
+> - JRebel은 reloading을 원활하게 하기 위해 클래스를 로드할 때 클래스를 다시 작성한다.
+
+### 20.2.1 condition evaluation 변화 기록하기
+- 기본적으로, 어플리케이션이 재시작할 때마다, *CONDITION EVALUATION DELTA* report가 기록된다. 이 리포트는 bean 추가 및 제거 혹은 configuration 속성들을 설정하는 것과 같은 변경이 있을 때 auto-configuration에 대한 변경 사항을 표시한다.
+- 이 리포트를 비활성화하려면 아래와 같이 하면 된다.
+```
+spring.devtools.restart.log-condition-evaluation-delta=false
+```
+
+### 20.2.2 Resources 제외하기
+- 특정 resource들은 변경될 때 재시작과 연결할 필요가 없다. 예를 들면, Thymeleaf 템플릿은 바로 수정될 수 있다.
+- 기본적으로, `/META-INF/maven`, `/META-INF/resources`, `/resources`, `/static`, `/public`, `/templates` 에 있는 resource들의 변경은 재시작과 연결되지 않는다. 하지만 [live reload](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-livereload)와는 연결된다.
+- Resources 제외하는 것에 대해 커스터마이징하고 싶다면, `spring.devtools.restart.exclude` 속성을 사용할 수 있다. 예를 들어, `/static` 과 `/public` 만 제외하고 싶다면 아래와 같이 속성을 설정하면 된다.
+```
+spring.devtools.restart.exclude=static/**,public/**
+```
+> 기본값을 유지하면서 제외항목을 추가하고 싶다면, `spring.devtools.restart.additional-exclude` 속성을 사용하면 된다.
+
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
