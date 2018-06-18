@@ -535,6 +535,55 @@ spring.devtools.reload.trigger-file=.reloadtrigger
 ```
 spring.devtools.remote.secret=mysecret
 ```
+> 원격 어플리케이션에서 `spring-boot-devtools` 를 활성화 하는 것은 보안적으로 위험할 수 있다. 운영 환경에선 절대 `spring-boot-devtools` 를 활성화 하면 안된다.
+
+### 20.5.1 원격 클라이언트 어플리케이션 실행하기
+- 원격 클라이언트 어플리케이션은 IDE와 함께 실행되도록 디자인 되어있다.
+- 접속하려고 하는 원격 프로젝트와 동일한 classpath에서 `org.springframework.boot.devtools.RemoteSpringApplication` 를 실행해야 한다.
+- 어플리케이션의 필수적인 단독 argument는 접속할 원격 URL이다.
+- 예를 들어, Cloud Foundry에 `my-app` 이름의 프로젝트 배포하였고 Eclipse 또는 STS를 사용한다면 아래와 같이 할 것이다.
+    + `Run` 메뉴에서 `Run Configurations…​` 를 선택
+    + "launch configuration"에서 `Java Application` 만들기
+    + `my-app` 프로젝트 열기
+    + 메인 클래스에서 `org.springframework.boot.devtools.RemoteSpringApplication` 사용
+    + `Program arguments`에 `https://myapp.cfapps.io` (또는 원격 URL) 추가  
+
+- 실행 중인 원격 클라이언트는 아래 리스트와 유사할 수 있다.
+```
+  .   ____          _                                              __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _          ___               _      \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` |        | _ \___ _ __  ___| |_ ___ \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| []::::::[]   / -_) '  \/ _ \  _/ -_) ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, |        |_|_\___|_|_|_\___/\__\___|/ / / /
+ =========|_|==============|___/===================================/_/_/_/
+ :: Spring Boot Remote :: 2.0.3.RELEASE
+
+2015-06-10 18:25:06.632  INFO 14938 --- [           main] o.s.b.devtools.RemoteSpringApplication   : Starting RemoteSpringApplication on pwmbp with PID 14938 (/Users/pwebb/projects/spring-boot/code/spring-boot-devtools/target/classes started by pwebb in /Users/pwebb/projects/spring-boot/code/spring-boot-samples/spring-boot-sample-devtools)
+2015-06-10 18:25:06.671  INFO 14938 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@2a17b7b6: startup date [Wed Jun 10 18:25:06 PDT 2015]; root of context hierarchy
+2015-06-10 18:25:07.043  WARN 14938 --- [           main] o.s.b.d.r.c.RemoteClientConfiguration    : The connection to http://localhost:8080 is insecure. You should use a URL starting with 'https://'.
+2015-06-10 18:25:07.074  INFO 14938 --- [           main] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2015-06-10 18:25:07.130  INFO 14938 --- [           main] o.s.b.devtools.RemoteSpringApplication   : Started RemoteSpringApplication in 0.74 seconds (JVM running for 1.105)
+```
+
+> 원격 클라이언트가 실제 어플리케이션과 동일한 classpath를 사용하기 때문에 어플리케이션의 속성들을 직접 읽을 수 있다. 이것이 인증을 위해 `spring.devtools.remote.secret` 속성을 읽고 서버에 전달하는 방법이다.
+
+> traffic이 암호화되고 암호가 유출되지 않도록 `https://` 를 접속 프로토콜로 사용하도록 권장한다.
+
+> 원격 어플리케이션에 접근하기 위해 프록시를 사용해야 한다면, `spring.devtools.remote.proxy.host` 과 `spring.devtools.remote.proxy.port` 속성을 구성하면 된다.
+
+### 20.5.2 원격 업데이트
+- 원격 클라이언트는 로컬 재시작과 동일한 방식으로 어플리케이션의 classpath 변경사항을 모니터링 한다.
+- 업데이트된 리소스가 원격 어플리케이션에 푸시되고(필요 시) 재시작과 연결된다.
+- 로컬에 없는 클라우드 서비스를 사용하는 기능을 반복하여 사용 시 유용할 수 있다.
+- 일반적으로 원격 업데이트 및 재시작은 전체 빌드와 배포의 주기보다 훨씬 빠르다.
+
+> 파일은 원격 클라이언트가 실행 중일 때만 모니터링 된다. 원격 클라이언트를 시작하기 전에 파일을 변경하면 원격 서버로 푸시되지 않는다.
+
+## 21. 운영 어플리케이션 패키징
+- 실행가능한 jar 파일은 운영 배포에 사용될 수 있다.
+- 필요한 것들을 자체적으로 모두 가지고 있기 때문에, 클라우드 기반 배포에 잘 맞는다.
+- “production ready” (health, auditing, metric REST, JMX end-points) 기능을 위해 `spring-boot-actuator` 추가를 고려해라. 자세한 내용은 [Part V, “Spring Boot Actuator: Production-ready features”](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html) 을 참조
+
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
