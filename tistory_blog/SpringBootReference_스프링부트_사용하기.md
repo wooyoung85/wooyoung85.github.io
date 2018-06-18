@@ -1,5 +1,5 @@
 > 스프링 부트 레퍼런스 문서 중 Part III. Using Spring Boot를 보면서 번역 및 정리를 한 문서 입니다.  
-> 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 참고하시기 바랍니다.
+> 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 를 참고하시기 바랍니다.
 
 #### 이 절은 스프링 부트를 사용법에 대해 자세히 설명합니다.
 #### 빌드 시스템, auto-configuration, 어플리케이션 실행 방법과 같은 주제가 포함되어 있고 스프링 부트 모범 사례를 다루게 됩니다.
