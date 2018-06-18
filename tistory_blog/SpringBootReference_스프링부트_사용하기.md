@@ -1,8 +1,10 @@
 > 스프링 부트 레퍼런스 문서 중 Part III. Using Spring Boot를 보면서 번역 및 정리를 한 문서 입니다.  
 > 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 참고하시기 바랍니다.
 
-> ##### 이 절은 스프링 부트를 사용법에 대해 자세히 설명합니다.<br> 빌드 시스템, auto-configuration, 어플리케이션 실행 방법과 같은 주제가 포함되어 있고 스프링 부트 모범 사례를 다루게 된다.<br /> Spring Boot에는 특별히 필요한 것은 없지만(사용할 수 있는 또 다른 라이브러리일 뿐), 따라했을 때 개발 프로세스를 좀 더 쉽게 만들 수 있는 몇 가지 권장 사항이 있다.
-
+#### 이 절은 스프링 부트를 사용법에 대해 자세히 설명합니다.
+#### 빌드 시스템, auto-configuration, 어플리케이션 실행 방법과 같은 주제가 포함되어 있고 스프링 부트 모범 사례를 다루게 됩니다.
+#### 스프링 부트에 특별히 필요한 것은 없지만(사용할 수 있는 또 다른 라이브러리일 뿐), 따라했을 때 개발 프로세스를 좀 더 쉽게 만들 수 있는 몇 가지 권장 사항이 있습니다.
+---
 
 ## 13. Build System
 - 종속성 관리를 지원하고 "Maven Central" 저장소에 게시된 아티팩트를 사용할 수 있는 Build System을 선택하는 것이 좋다.
