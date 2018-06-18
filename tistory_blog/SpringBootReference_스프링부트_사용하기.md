@@ -1,6 +1,9 @@
 > 스프링 부트 레퍼런스 문서 중 Part III. Using Spring Boot를 보면서 번역 및 정리를 한 문서 입니다.  
 > 잘못 해석한 부분이 있을 수 있으니 정확한 정보는 [Part III. Using Spring Boot](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot) 참고하시기 바랍니다.
 
+> ##### 이 절은 스프링 부트를 사용법에 대해 자세히 설명합니다.<br> 빌드 시스템, auto-configuration, 어플리케이션 실행 방법과 같은 주제가 포함되어 있고 스프링 부트 모범 사례를 다루게 된다.<br /> Spring Boot에는 특별히 필요한 것은 없지만(사용할 수 있는 또 다른 라이브러리일 뿐), 따라했을 때 개발 프로세스를 좀 더 쉽게 만들 수 있는 몇 가지 권장 사항이 있다.
+
+
 ## 13. Build System
 - 종속성 관리를 지원하고 "Maven Central" 저장소에 게시된 아티팩트를 사용할 수 있는 Build System을 선택하는 것이 좋다.
 - Maven이나 Gradle을 선택하는걸 추천함
@@ -348,7 +351,7 @@ $ export MAVEN_OPTS=-Xmx1024m
 ```
 
 ## 19.5 Hot Swapping
-- 스프링 부트 어플리케이션은 일반 자바 어플리케이션이 때문에 JVM hot-swapping을 즉시 실행 할 수 있습니다.  (Hot Swapping이란? 실행을 중단하지 않고 프로그램의 실행 코드를 변경하는 기능)
+- 스프링 부트 어플리케이션은 일반 자바 어플리케이션이 때문에 JVM hot-swapping을 즉시 실행 할 수 있다.  (Hot Swapping이란? 실행을 중단하지 않고 프로그램의 실행 코드를 변경하는 기능)
 - JVM hot swapping은 대체할 수 있는 바이트코드로 다소 제한된다.
 - 좀 더 완벽한 솔루션을 위해선 [JRebel](https://zeroturnaround.com/software/jrebel/) 을 사용할 수 있다.
 - `spring-boot-devtools` 모듈은 빠르게 어플리케이션을 재시작하는 지원한다. 
@@ -368,7 +371,7 @@ $ export MAVEN_OPTS=-Xmx1024m
         </dependency>
     </dependencies>
     ```
-> - 완전히 패키징 된 어플리케이션을 실행할 경우 개발자 도구는 자동으로 비활성화 됩니다.
+> - 완전히 패키징 된 어플리케이션을 실행할 경우 개발자 도구는 자동으로 비활성화 된다.
 > - `java -jar` 로 실행되거나 특정 클래스로더로 시작되는 경우 운영 모드의 어플리케이션으로 인식된다.
 > - 메이븐의 optional하게 의존성 플래그 지정하기 또는 Gradle의 `compileOnly` 를 사용하는 것은 프로젝트를 의존하는 다른 모듈에 devtools이 추이적으로 적용되지 않도록  방지하는 가장 좋은 방법이다.  
 *(spring-boot-devtools 사용 중인 A프로젝트를 B프로젝트가 의존하여 사용하는 경우 B프로젝트까지 spring-boot-devtools가 적용되게 하지 않으려면 메이븐의 경우 `<optional>` 속성을 "true" 로 하면 된다.)*
@@ -376,7 +379,7 @@ $ export MAVEN_OPTS=-Xmx1024m
 > 리패키징 된 아카이브에는 기본적으로 devtools가 포함되어 있지 않다. 원격 devtools 기능을 사용하기 원한다면(원격 디버깅을 하고 싶다면), 빌드 속성 중 `excludeDevtools` 을 비활성화해야 한다. 이 속성은 Maven과 Gradle 모두 지원한다.
 
 ## 20.1 Property Defaults
-- 스프링 부트에서 지원하는 몇몇 라이브러리는 성능을 향상시키기 위해 cache를 사용합니다. 예를 들어, [template engines](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-template-engines) 은 반복적으로 템플릿 파일을 parsing 하는 것을 방지하기 위해 컴파일 된 템플릿들을 cache한다.
+- 스프링 부트에서 지원하는 몇몇 라이브러리는 성능을 향상시키기 위해 cache를 사용한다. 예를 들어, [template engines](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-template-engines) 은 반복적으로 템플릿 파일을 parsing 하는 것을 방지하기 위해 컴파일 된 템플릿들을 cache한다.
 - 스프링 MVC는 정적 리소스들을 전달할 때 response에 HTTP cashing 헤더를 추가할 수 있다.
 - cashing은 운영환경에선 아주 유용하지만, 개발하는 동안에는 생산성이 저하시킨다. cashing을 하게 되면 어플리케이션에 방금 변경된 내용을 볼 수 없다. 이런 이유로 spring-boot-devtools는 기본적으로 cashing 옵션을 비활성화 한다.
 - Cache 옵션은 `application.properties` 파일의 설정에 의해 구성된다. 예를 들어, Thymeleaf는 `spring.thymeleaf.cache` 속성을 제공한다.
@@ -535,6 +538,55 @@ spring.devtools.reload.trigger-file=.reloadtrigger
 ```
 spring.devtools.remote.secret=mysecret
 ```
+> 원격 어플리케이션에서 `spring-boot-devtools` 를 활성화 하는 것은 보안적으로 위험할 수 있다. 운영 환경에선 절대 `spring-boot-devtools` 를 활성화 하면 안된다.
+
+### 20.5.1 원격 클라이언트 어플리케이션 실행하기
+- 원격 클라이언트 어플리케이션은 IDE와 함께 실행되도록 디자인 되어있다.
+- 접속하려고 하는 원격 프로젝트와 동일한 classpath에서 `org.springframework.boot.devtools.RemoteSpringApplication` 를 실행해야 한다.
+- 어플리케이션의 필수적인 단독 argument는 접속할 원격 URL이다.
+- 예를 들어, Cloud Foundry에 `my-app` 이름의 프로젝트 배포하였고 Eclipse 또는 STS를 사용한다면 아래와 같이 할 것이다.
+    + `Run` 메뉴에서 `Run Configurations…​` 를 선택
+    + "launch configuration"에서 `Java Application` 만들기
+    + `my-app` 프로젝트 열기
+    + 메인 클래스에서 `org.springframework.boot.devtools.RemoteSpringApplication` 사용
+    + `Program arguments`에 `https://myapp.cfapps.io` (또는 원격 URL) 추가  
+
+- 실행 중인 원격 클라이언트는 아래 리스트와 유사할 수 있다.
+```
+  .   ____          _                                              __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _          ___               _      \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` |        | _ \___ _ __  ___| |_ ___ \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| []::::::[]   / -_) '  \/ _ \  _/ -_) ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, |        |_|_\___|_|_|_\___/\__\___|/ / / /
+ =========|_|==============|___/===================================/_/_/_/
+ :: Spring Boot Remote :: 2.0.3.RELEASE
+
+2015-06-10 18:25:06.632  INFO 14938 --- [           main] o.s.b.devtools.RemoteSpringApplication   : Starting RemoteSpringApplication on pwmbp with PID 14938 (/Users/pwebb/projects/spring-boot/code/spring-boot-devtools/target/classes started by pwebb in /Users/pwebb/projects/spring-boot/code/spring-boot-samples/spring-boot-sample-devtools)
+2015-06-10 18:25:06.671  INFO 14938 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@2a17b7b6: startup date [Wed Jun 10 18:25:06 PDT 2015]; root of context hierarchy
+2015-06-10 18:25:07.043  WARN 14938 --- [           main] o.s.b.d.r.c.RemoteClientConfiguration    : The connection to http://localhost:8080 is insecure. You should use a URL starting with 'https://'.
+2015-06-10 18:25:07.074  INFO 14938 --- [           main] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2015-06-10 18:25:07.130  INFO 14938 --- [           main] o.s.b.devtools.RemoteSpringApplication   : Started RemoteSpringApplication in 0.74 seconds (JVM running for 1.105)
+```
+
+> 원격 클라이언트가 실제 어플리케이션과 동일한 classpath를 사용하기 때문에 어플리케이션의 속성들을 직접 읽을 수 있다. 이것이 인증을 위해 `spring.devtools.remote.secret` 속성을 읽고 서버에 전달하는 방법이다.
+
+> traffic이 암호화되고 암호가 유출되지 않도록 `https://` 를 접속 프로토콜로 사용하도록 권장한다.
+
+> 원격 어플리케이션에 접근하기 위해 프록시를 사용해야 한다면, `spring.devtools.remote.proxy.host` 과 `spring.devtools.remote.proxy.port` 속성을 구성하면 된다.
+
+### 20.5.2 원격 업데이트
+- 원격 클라이언트는 로컬 재시작과 동일한 방식으로 어플리케이션의 classpath 변경사항을 모니터링 한다.
+- 업데이트된 리소스가 원격 어플리케이션에 푸시되고(필요 시) 재시작과 연결된다.
+- 로컬에 없는 클라우드 서비스를 사용하는 기능을 반복하여 사용 시 유용할 수 있다.
+- 일반적으로 원격 업데이트 및 재시작은 전체 빌드와 배포의 주기보다 훨씬 빠르다.
+
+> 파일은 원격 클라이언트가 실행 중일 때만 모니터링 된다. 원격 클라이언트를 시작하기 전에 파일을 변경하면 원격 서버로 푸시되지 않는다.
+
+## 21. 운영 어플리케이션 패키징
+- 실행가능한 jar 파일은 운영 배포에 사용될 수 있다.
+- 필요한 것들을 자체적으로 모두 가지고 있기 때문에, 클라우드 기반 배포에 잘 맞는다.
+- “production ready” (health, auditing, metric REST, JMX end-points) 기능을 위해 `spring-boot-actuator` 추가를 고려해라. 자세한 내용은 [Part V, “Spring Boot Actuator: Production-ready features”](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready.html) 을 참조
+
 
 ## 참고자료
 [![스프링 부트 2.0 Day 3. 스프링 부트 스타터](http://img.youtube.com/vi/w9wqpnLHnkY/0.jpg)](https://www.youtube.com/watch?v=w9wqpnLHnkY) 스프링 부트 2.0 Day 3. 스프링 부트 스타터
