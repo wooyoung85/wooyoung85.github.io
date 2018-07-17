@@ -1,7 +1,7 @@
 ## 1. 메이븐 프로젝트 Install 시 오류
 - 프로젝트에서 마우스 우클릭 > maven > update project
 - 메이븐 리소스 저장소 .m2 폴더를 삭제 후 다시 다운로드<br/>
-  (자세한 경로는 메뉴 > Windows > preferences > maven > user settings 에서 확인)
+  (자세한 경로는 `Windows > preferences > maven > user settings` 에서 확인)
 
 ## 2. Could not find or load main class org.apache.maven.wrapper.MavenWrapperMain
 - .gitignore 파일에 셋팅된 항목 중 *.jar 가 있어서 github에 저장이 안 됨;;
