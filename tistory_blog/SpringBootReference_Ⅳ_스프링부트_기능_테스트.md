@@ -81,7 +81,7 @@
 ## 43. Testing
 
 - `spring-boot-starter-test` 를 사용하여 import 할 수 있다.
-- `spring-boot-test` core item들을 담고 있고, `spring-boot-test-autoconfigure` 는 테스트 auto-configuration을 지원
+- `spring-boot-test` 는 core item들을 담고 있고, `spring-boot-test-autoconfigure` 는 테스트 auto-configuration을 지원
 
 ## 43.1 Test Scope Dependencies
 
@@ -96,13 +96,22 @@
 ## 43.2 Testing Spring Applications
 
 - DI를 사용해서 코드 작성을 하면 테스트 코드 작성이 쉽다.
+- `new` 연산자를 사용해서 객체를 초기화할 수 있고, 진짜 의존성 대신 mock objects를 사용할 수 있다.
 - 유닛 테스트를 넘어서 Spring `ApplicationContext` 와 함께 통합테스트를 해야 할 경우 시스템의 배포나 다른 인프라 요소들의 도움 없이 테스트 하기 유용하다.
-- 직접 `org.springframework:spring-test` dependency 선언하거나 `spring-boot-starter-test` 를 사용해서 transitively pull 할 수 있다.
+- 스프링 프레임워크는 통합 테스트를 위한 전용 테스트 모듈을 포함한다.
+- 직접 `org.springframework:spring-test` dependency 선언하거나 `spring-boot-starter-test` 를 사용해서 추이적으로(transitively) pull 할 수 있다.
+- 스프링 테스트를 사용해 보지 않았다면, [relevant section](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-test-scope-dependencies) 을 먼저 읽어야 한다.
 
 ## 43.3 Testing Spring Boot Applications
 
-- SpringBoot에서 제공하는 `@SpringBootTest` 어노테이션은 `spring-test` `@ContextConfiguration` 를 대체할 수 있고, `ApplicationContext` 를 생성한다.
-- 반드시 `@RunWith(SpringRunner.class)` 와 함께 사용되어야 한다. (같이 사용하지 않으면 다 무시됨)
+- A Spring Boot application is a Spring `ApplicationContext` (응?.. 스프링 부트 어플리케이션이 `ApplicationContext` 을 사용하고 매우 중요하다는 의미로 해석했다)
+- 스프링 부트 어플리케이션을 테스트를 하기 위해서 일반적인 스프링 context를 사용하는 것 외에 특별할 건 없다.
+  > Spring의 외부 속성, 로깅 및 기타 기능은 SpringApplication을 사용하여 생성 한 경우에만 기본적으로 컨텍스트에 설치된다.
+- 스프링 부트 기능이 필요할 때 `spring-test` 의 `@ContextConfiguration` 를 대체하는 `@SpringBootTest` 어노테이션을 사용할 수 있다.
+- `@SpringBootTest` 어노테이션은 `SpringApplication` 을 통해 테스트에 사용되는 `ApplicationContext` 을 생성하는 방식으로 작동한다.
+- `@SpringBootTest` 외에 애플리케이션의 특정 부분을 잘라서 테스트하기 위해 여러개의 다른 어노테이션이 제공된다.
+  > 반드시 `@RunWith(SpringRunner.class)` 와 함께 사용되어야 한다. (같이 사용하지 않으면 다 무시됨)
+  
 - `@SpringBootTest` 의 `webEnvironment` 속성을 사용하여 테스트를 좀 더 자세하게 정의할 수 있다.
   - MOCK
   - RANDOM_PORT
