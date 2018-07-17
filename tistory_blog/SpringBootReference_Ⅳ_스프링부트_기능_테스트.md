@@ -163,3 +163,13 @@
     @SpringBootTest(classes=UserController.class) + @AutoConfigureMockMvc 와 같다
     ```
 - 슬라이스는 매우 제한되게 불러오지만 더 제거하고 싶으면 `@...Test` 어노테이션에서 제공하는 `excludeAutoConfiguration` 속성을 사용 또는 `@ImportAutoConfiguration#exclude`
+
+## 참고자료
+
+[![스프링 부트 2.0 Day 19. 스프링 부트 테스트 1 (@SpringBootTest)](http://img.youtube.com/vi/pnkBfsIqdK4/0.jpg)](https://www.youtube.com/watch?v=pnkBfsIqdK4) 스프링 부트 2.0 Day 19. 스프링 부트 테스트 1 (@SpringBootTest)
+
+[![스프링 부트 2.0 Day 20. 스프링 부트 테스트 2 (랜덤 포트와 @MockBean)](http://img.youtube.com/vi/yJ_2eHBQW40/0.jpg)](https://www.youtube.com/watch?v=yJ_2eHBQW40) 스프링 부트 2.0 Day 20. 스프링 부트 테스트 2 (랜덤 포트와 @MockBean)
+
+[![스프링 부트 2.0 Day 21. 테스트 3 @...Test 와 @AutoConfigure... 애노테이션들](http://img.youtube.com/vi/GECCfXZ0W6w/0.jpg)](https://www.youtube.com/watch?v=GECCfXZ0W6w) 스프링 부트 2.0 Day 21. 테스트 3 @...Test 와 @AutoConfigure... 애노테이션들
+
+[![스프링 부트 2.0 Day 22. 테스트 마무리. Slice 테스트 주의할 점과 유틸리티](http://img.youtube.com/vi/Tb0guL8hURs/0.jpg)](https://www.youtube.com/watch?v=Tb0guL8hURs) 스프링 부트 2.0 Day 22. 테스트 마무리. Slice 테스트 주의할 점과 유틸리티
