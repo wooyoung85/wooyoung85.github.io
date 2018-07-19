@@ -28,7 +28,16 @@ now it's ok
 ```
 **GitHub의 스팸 탐지 시스템에 내 계정이 걸린것 같았다.**
 
-왜 걸렸는지는 모르겠지만 메일을 보내봐야 겠다.  
+GitHub Support에 메일을 보냈더니 거의 바로 답장이 왔다.
+```text
+Hi there,
+
+Sorry about that!
+
+Occasionally, our automated security mechanisms are incorrectly triggered, and we need to manually override them. I've reset your profile, so your repositories and gists should be available again, and you shouldn't see that message anymore.
+
+Best regards,
+```
 <br/>  
 
 
