@@ -39,8 +39,13 @@ reference : [MSDN - ASP.NET Routing](https://msdn.microsoft.com/en-us/library/cc
     }
     ```
 - colon(:)을 사용하여 데이터 형식을 제한할 수 있다.  
-    `month:regex(\\d{2}):range(1,12)`
+    ```c#
+    [Route(“movies/released/{year}/{month:regex(\\d{2}):range(1,12)}”)]
+    ```
 - 반드시 `App_Start > RouteConfig.cs` 에 아래와 같이 추가해서 ActionResult 메서드에 선언한 걸 사용하겠다고 알려줘야 함
     ```c#
     rotes.MapMvcAttributeRoutes();
     ```
+
+## 참고자료
+[The Complete ASP.NET MVC 5 Course](https://www.udemy.com/the-complete-aspnet-mvc-5-course/)
