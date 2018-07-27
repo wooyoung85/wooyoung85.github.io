@@ -24,7 +24,7 @@ reference : [MSDN - ASP.NET Routing](https://msdn.microsoft.com/en-us/library/cc
         new { year = @“\d{4}, month = @“\d{2}” }   // URL 파라미터 데이터 형식 제한
     );
     ```
-- `rotes.MapRoute()` 는 순서대로 규칙이 적용됨
+- `rotes.MapRoute()` 가 여러 개 선언되어 있다면 순서대로 규칙이 적용됨
 - specific한 규칙을 먼저 추가하고 default가 되는 규칙을 나중에 추가하면 된다.
 - **URL 파라미터의 데이터 형식을 제한할 경우 정해놓은 규칙대로 URL 요청이 오지 않을 경우 404(Not Found) 에러가 발생한다**
 
