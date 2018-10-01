@@ -74,59 +74,59 @@ INSTALLED_APPS = [
 
 #### 5. djangorestframework를 활용한 rest api 만들기
 - analysis/model.py
-```python
-# Analysis 모델 생성
-from django.db import models 
+    ```python
+    # Analysis 모델 생성
+    from django.db import models 
 
-class Analysis(models.Model): 
-    sentence = models.CharField(max_length=200)
-    polarity = models.CharField(max_length=10)
-```
+    class Analysis(models.Model): 
+        sentence = models.CharField(max_length=200)
+        polarity = models.CharField(max_length=10)
+    ```
 
 - 마이그레이션
-```shell
-$ python manage.py makemigrations 
-$ python manage.py migrate
-```
+    ```shell
+    $ python manage.py makemigrations 
+    $ python manage.py migrate
+    ```
 
 - analysis/serializer.py
-```python
-from rest_framework import serializers 
-from .models import Analysis 
+    ```python
+    from rest_framework import serializers 
+    from .models import Analysis 
 
-class AnalysisSerializer(serializers.ModelSerializer): 
-    class Meta: 
-        model = Analysis # 모델 설정 
-        fields = ('sentence','polarity') # 필드 설정
-```
+    class AnalysisSerializer(serializers.ModelSerializer): 
+        class Meta: 
+            model = Analysis # 모델 설정 
+            fields = ('sentence','polarity') # 필드 설정
+    ```
 
 - analysis/views.py  
 (viewset을 사용하면 CRUD 가 가능한 restful api가 생생됨)
-```python
-from rest_framework import viewsets 
-from .serializers import AnalysisSerializer 
-from .models import Analysis 
+    ```python
+    from rest_framework import viewsets 
+    from .serializers import AnalysisSerializer 
+    from .models import Analysis 
 
-class AnalysisViewSet(viewsets.ModelViewSet): 
-    queryset = Analysis.objects.all() 
-    serializer_class = AnalysisSerializer
-```
+    class AnalysisViewSet(viewsets.ModelViewSet): 
+        queryset = Analysis.objects.all() 
+        serializer_class = AnalysisSerializer
+    ```
 
 - django_app/urls.py
-```python
-from django.conf.urls import url, include
-from django.contrib import admin
-from rest_framework import routers
-from analysis.views import AnalysisViewSet
+    ```python
+    from django.conf.urls import url, include
+    from django.contrib import admin
+    from rest_framework import routers
+    from analysis.views import AnalysisViewSet
 
-router = routers.DefaultRouter()
-router.register('analysis', AnalysisViewSet)
+    router = routers.DefaultRouter()
+    router.register('analysis', AnalysisViewSet)
 
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)), 
-]
-```
+    urlpatterns = [
+        url(r'^admin/', admin.site.urls),
+        url(r'^', include(router.urls)), 
+    ]
+    ```
 
 #### 6. 실행
 ```shell
