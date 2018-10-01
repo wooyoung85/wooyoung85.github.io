@@ -9,142 +9,144 @@
 > 파이썬의 TextBlob 패키지를 활용하여 문장의 감정을 분석하는 간단한 Application
 
 ## 가상환경 구성
-1. #### [pyenv](https://github.com/pyenv/pyenv)와 [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)를 사용하여 python 환경 구성
+#### 1. [pyenv](https://github.com/pyenv/pyenv)와 [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)를 사용하여 python 환경 구성
 
-2. #### `pyenv activate <가상환경명>` 으로 가상환경을 활성화 한 후 아래 내용을 진행
-    ```shell
-    * 가상환경 생성
-    $ pyenv virtualenv 3.6.4 <가상환경명> 
+#### 2. `pyenv activate <가상환경명>` 으로 가상환경을 활성화 한 후 아래 내용을 진행
 
-    가상환경 활성화
-    $ pyenv activate <가상환경명>
+```shell
+# 가상환경 생성
+$ pyenv virtualenv 3.6.4 <가상환경명> 
 
-    가상환경 비활성화
-    $ pyenv deactivate
-    ```
+# 가상환경 활성화
+$ pyenv activate <가상환경명>
+
+# 가상환경 비활성화
+$ pyenv deactivate
+```
 
 ## django를 활용하여 rest api 만들기
 
-1. #### django 관련 패키지 설치
-    ```shell
-    $ pip install django djangorestframework
-    ```
+#### 1. django 관련 패키지 설치
 
-2. #### 프로젝트 생성
-    ```shell
-    $ mkdir kuber-sample-apps
-    $ cd kuber-sample-apps
-    $ django-admin startproject django_app
-    ```
+```shell
+$ pip install django djangorestframework
+```
 
-    ```
-    # 프로젝트 구조
-    kuber-sample-apps
+#### 2. 프로젝트 생성
+```shell
+$ mkdir kuber-sample-apps
+$ cd kuber-sample-apps
+$ django-admin startproject django_app
+```
+
+```
+# 프로젝트 구조
+kuber-sample-apps
+└─── django_app
     └─── django_app
-        └─── django_app
-        └─── manage.py
-    ```
+    └─── manage.py
+```
 
-3. #### analysis app 생성
-    ```shell
-    $ cd django_app
-    $ python manage.py startapp analysis
-    ```
+#### 3. analysis app 생성
+```shell
+$ cd django_app
+$ python manage.py startapp analysis
+```
 
-    ```
-    # 프로젝트 구조
-    kuber-sample-apps
+```
+# 프로젝트 구조
+kuber-sample-apps
+└─── django_app
+    └─── analysis
     └─── django_app
-        └─── analysis
-        └─── django_app
-        └─── manage.py
-    ```
+    └─── manage.py
+```
 
-4. #### settings.py 설정
-    ```python
-    ALLOWED_HOSTS = ['*'] 
-    INSTALLED_APPS = [ 
-        ... 
-        'rest_framework', 
-        'analysis.apps.AnalysisConfig', 
-    ]
-    ```
+#### 4. settings.py 설정
+```python
+ALLOWED_HOSTS = ['*'] 
+INSTALLED_APPS = [ 
+    ... 
+    'rest_framework', 
+    'analysis.apps.AnalysisConfig', 
+]
+```
 
-5. #### djangorestframework를 활용한 rest api 만들기
+#### 5. djangorestframework를 활용한 rest api 만들기
 - analysis/model.py
-    ```python
-    # Analysis 모델 생성
-    from django.db import models 
+```python
+# Analysis 모델 생성
+from django.db import models 
 
-    class Analysis(models.Model): 
-        sentence = models.CharField(max_length=200)
-        polarity = models.CharField(max_length=10)
-    ```
+class Analysis(models.Model): 
+    sentence = models.CharField(max_length=200)
+    polarity = models.CharField(max_length=10)
+```
 
 - 마이그레이션
-    ```shell
-    $ python manage.py makemigrations 
-    $ python manage.py migrate
-    ```
+```shell
+$ python manage.py makemigrations 
+$ python manage.py migrate
+```
 
 - analysis/serializer.py
-    ```python
-    from rest_framework import serializers 
-    from .models import Analysis 
+```python
+from rest_framework import serializers 
+from .models import Analysis 
 
-    class AnalysisSerializer(serializers.ModelSerializer): 
-        class Meta: 
-            model = Analysis # 모델 설정 
-            fields = ('sentence','polarity') # 필드 설정
-    ```
+class AnalysisSerializer(serializers.ModelSerializer): 
+    class Meta: 
+        model = Analysis # 모델 설정 
+        fields = ('sentence','polarity') # 필드 설정
+```
 
 - analysis/views.py  
 (viewset을 사용하면 CRUD 가 가능한 restful api가 생생됨)
-    ```python
-    from rest_framework import viewsets 
-    from .serializers import AnalysisSerializer 
-    from .models import Analysis 
+```python
+from rest_framework import viewsets 
+from .serializers import AnalysisSerializer 
+from .models import Analysis 
 
-    class AnalysisViewSet(viewsets.ModelViewSet): 
-        queryset = Analysis.objects.all() 
-        serializer_class = AnalysisSerializer
-    ```
+class AnalysisViewSet(viewsets.ModelViewSet): 
+    queryset = Analysis.objects.all() 
+    serializer_class = AnalysisSerializer
+```
 
 - django_app/urls.py
-    ```python
-    from django.conf.urls import url, include
-    from django.contrib import admin
-    from rest_framework import routers
-    from analysis.views import AnalysisViewSet
+```python
+from django.conf.urls import url, include
+from django.contrib import admin
+from rest_framework import routers
+from analysis.views import AnalysisViewSet
 
-    router = routers.DefaultRouter()
-    router.register('analysis', AnalysisViewSet)
+router = routers.DefaultRouter()
+router.register('analysis', AnalysisViewSet)
 
-    urlpatterns = [
-        url(r'^admin/', admin.site.urls),
-        url(r'^', include(router.urls)), 
-    ]
-    ```
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^', include(router.urls)), 
+]
+```
 
-6. #### 실행
-    ```shell
-    $ python manage.py runserver 
-    ```
-7. #### http://localhost:8000 접속해서 확인
+#### 6. 실행
+```shell
+$ python manage.py runserver 
+```
+#### 7. http://localhost:8000 접속해서 확인
 
 ## Celery 연동
-1. #### Redis 설치
+#### 1. Redis 설치
     ```shell
     $ brew install redis
     $ redis-server
     ```
-2. #### 관련 패키지 설치
+#### 2. 관련 패키지 설치
     ```shell
     $ pip install 'celery[redis]'
     $ pip install textblob
     $ python -m textblob.download_corpora
     ```
-3. #### settings.py 설정 추가
+#### 3. settings.py 설정 추가
     ```python
     # REDIS
     REDIS_URL = "redis://{host}:{port}".format(
@@ -159,7 +161,7 @@
     CELERY_RESULT_SERIALIZER = 'json'
     CELERY_TASK_SERIALIZER = 'json'
     ```
-4. #### celery.py 추가
+#### 4. celery.py 추가
     ```python
     # django_app/celery.py
 
@@ -177,7 +179,7 @@
     def debug_task(self):
         print('Request: {0!r}'.format(self.request))
     ```
-5. #### tasks.py 만들기 (Text 감정 분석 Task)
+#### 5. tasks.py 만들기 (Text 감정 분석 Task)
     ```python
     # analysis/tasks.py
 
@@ -191,7 +193,7 @@
         polarity = TextBlob(sentence).sentences[0].polarity
         return polarity
     ```
-6. #### Celery 실행
+#### 6. Celery 실행
     Redis가 실행된 상태에서 실행해야 함 (`ps -ef | grep redis` 으로 확인 가능)
     ```shell
     $ celery -A django_app worker -l info
@@ -223,7 +225,7 @@
     [2018-09-27 09:54:32,965: INFO/MainProcess] celery@uyeong-ui-MacBook-Pro.local ready.
     ```
 
-7. #### 확인
+#### 7. 확인
     ```shell
     $ python manage.py shell
     Python 3.6.4 (default, Sep  3 2018, 13:18:55)
@@ -242,7 +244,7 @@
 
 
 ## text 감정 분석 api 만들기
-1. #### api app 만들기 (Text 감정 분석을 위해 외부 Application에서 호출하게 될 api)
+#### 1. api app 만들기 (Text 감정 분석을 위해 외부 Application에서 호출하게 될 api)
     ```shell
     $ python manage.py startapp api
     ```
@@ -266,7 +268,7 @@
     ```
 
     
-2. #### api 경로 설정
+#### 2. api 경로 설정
     http://localhost:8000/api/analysis?sentence=<문장> 이런 식으로 api 경로를 구성
 
 - django_app/urls.py에 추가
@@ -306,7 +308,7 @@
             serializer.save()
         return JsonResponse(data)
     ```
-3. #### http://localhost:8000/api/analysis?sentence=<문장> 호출하여 확인
+#### 3. http://localhost:8000/api/analysis?sentence=<문장> 호출하여 확인
 
 
 # 2. Spring Boot Application
@@ -315,11 +317,11 @@
 JDK8과 메이븐이 설치되어 있어야 함
 
 ## 프로젝트 생성
-1. #### https://start.spring.io/ 에서 Generate Project 후 압축파일 다운로드
+#### 1. https://start.spring.io/ 에서 Generate Project 후 압축파일 다운로드
     - Group : com.sa.web
     - Artifact : sentiment-analysis
     - Dependencies : Jersey, Web
-2. #### 다운 받은 압축파일 해제한 후 kuber-sample-apps 폴더 밑으로 이동
+#### 2. 다운 받은 압축파일 해제한 후 kuber-sample-apps 폴더 밑으로 이동
     ```
     # 프로젝트 구조
     kuber-sample-apps
