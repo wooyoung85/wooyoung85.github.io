@@ -2,7 +2,7 @@
 >  
 > freeCodeCamp의 [Learn Kubernetes in Under 3 Hours: A Detailed Guide to Orchestrating Containers](https://medium.freecodecamp.org/learn-kubernetes-in-under-3-hours-a-detailed-guide-to-orchestrating-containers-114ff420e882) 블로그 글을 토대로 작성하였습니다.
 >
-> 제 코드는 [여기서](https://github.com/wooyoung85/kuber-sample-apps) 확인하실 수 있습니다.
+> 제 코드는 [Github](https://github.com/wooyoung85/kuber-sample-apps/tree/1.make_microservice/django_app)에서 확인하실 수 있습니다.
 
 
 # 1. Python Application
@@ -136,136 +136,134 @@ $ python manage.py runserver
 
 ## Celery 연동
 #### 1. Redis 설치
-    ```shell
-    $ brew install redis
-    $ redis-server
-    ```
+```shell
+$ brew install redis
+$ redis-server
+```
+
 #### 2. 관련 패키지 설치
-    ```shell
-    $ pip install 'celery[redis]'
-    $ pip install textblob
-    $ python -m textblob.download_corpora
-    ```
+```shell
+$ pip install 'celery[redis]'
+$ pip install textblob
+$ python -m textblob.download_corpora
+```
+
 #### 3. settings.py 설정 추가
-    ```python
-    # REDIS
-    REDIS_URL = "redis://{host}:{port}".format(
-        host=os.getenv('REDIS_HOST', 'localhost'),
-        port=os.getenv('REDIS_PORT', '6379')
-    )
+```python
+# Celery application definition
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379'),
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+```
 
-    # Celery application definition
-    CELERY_BROKER_URL = REDIS_URL
-    CELERY_RESULT_BACKEND = REDIS_URL
-    CELERY_ACCEPT_CONTENT = ['application/json']
-    CELERY_RESULT_SERIALIZER = 'json'
-    CELERY_TASK_SERIALIZER = 'json'
-    ```
 #### 4. celery.py 추가
-    ```python
-    # django_app/celery.py
+```python
+# django_app/celery.py
 
-    from __future__ import absolute_import, unicode_literals
-    import os
-    from celery import Celery
+from __future__ import absolute_import, unicode_literals
+import os
+from celery import Celery
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.settings')
-    app = Celery('django_app')
-    app.config_from_object('django.conf:settings', namespace='CELERY')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.settings')
+app = Celery('django_app')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-    app.autodiscover_tasks()
+app.autodiscover_tasks()
 
-    @app.task(bind=True)
-    def debug_task(self):
-        print('Request: {0!r}'.format(self.request))
-    ```
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))
+```
+
 #### 5. tasks.py 만들기 (Text 감정 분석 Task)
-    ```python
-    # analysis/tasks.py
+```python
+# analysis/tasks.py
 
-    from __future__ import absolute_import, unicode_literals
-    from django_app.celery import app
-    from celery import task
-    from textblob import TextBlob
+from __future__ import absolute_import, unicode_literals
+from django_app.celery import app
+from celery import task
+from textblob import TextBlob
 
-    @app.task
-    def sentence_analysis(sentence):
-        polarity = TextBlob(sentence).sentences[0].polarity
-        return polarity
-    ```
+@app.task
+def sentence_analysis(sentence):
+    polarity = TextBlob(sentence).sentences[0].polarity
+    return polarity
+```
+
 #### 6. Celery 실행
-    Redis가 실행된 상태에서 실행해야 함 (`ps -ef | grep redis` 으로 확인 가능)
-    ```shell
-    $ celery -A django_app worker -l info
+Redis가 실행된 상태에서 실행해야 함 (`ps -ef | grep redis` 으로 확인 가능)
+```shell
+$ celery -A django_app worker -l info
 
-    celery@uyeong-ui-MacBook-Pro.local v4.2.1 (windowlicker)
+celery@uyeong-ui-MacBook-Pro.local v4.2.1 (windowlicker)
 
-    Darwin-17.7.0-x86_64-i386-64bit 2018-09-27 09:54:31
+Darwin-17.7.0-x86_64-i386-64bit 2018-09-27 09:54:31
 
-    [config]
-    .> app:         django_app:0x10ae6b8d0
-    .> transport:   redis://localhost:6379//
-    .> results:     redis://localhost:6379/
-    .> concurrency: 12 (prefork)
-    .> task events: OFF (enable -E to monitor tasks in this worker)
+[config]
+.> app:         django_app:0x10ae6b8d0
+.> transport:   redis://localhost:6379//
+.> results:     redis://localhost:6379/
+.> concurrency: 12 (prefork)
+.> task events: OFF (enable -E to monitor tasks in this worker)
 
-    [queues]
-    .> celery           exchange=celery(direct) key=celery
+[queues]
+.> celery           exchange=celery(direct) key=celery
 
 
-    [tasks]
-    . analysis.tasks.sentence_analysis
-    . django_app.celery.debug_task
+[tasks]
+. analysis.tasks.sentence_analysis
+. django_app.celery.debug_task
 
-    [2018-09-27 09:54:31,924: INFO/MainProcess] Connected to redis://localhost:6379//
-    [2018-09-27 09:54:31,935: INFO/MainProcess] mingle: searching for neighbors
-    [2018-09-27 09:54:32,953: INFO/MainProcess] mingle: all alone
-    [2018-09-27 09:54:32,965: WARNING/MainProcess] /Users/wooyoung/.pyenv/versions/3.6.4/envs/kuber/lib/python3.6/site-packages/celery/fixups/django.py:200: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
-    warnings.warn('Using settings.DEBUG leads to a memory leak, never '
-    [2018-09-27 09:54:32,965: INFO/MainProcess] celery@uyeong-ui-MacBook-Pro.local ready.
-    ```
+[2018-09-27 09:54:31,924: INFO/MainProcess] Connected to redis://localhost:6379//
+[2018-09-27 09:54:31,935: INFO/MainProcess] mingle: searching for neighbors
+[2018-09-27 09:54:32,953: INFO/MainProcess] mingle: all alone
+[2018-09-27 09:54:32,965: WARNING/MainProcess] /Users/wooyoung/.pyenv/versions/3.6.4/envs/kuber/lib/python3.6/site-packages/celery/fixups/django.py:200: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2018-09-27 09:54:32,965: INFO/MainProcess] celery@uyeong-ui-MacBook-Pro.local ready.
+```
 
 #### 7. 확인
-    ```shell
-    $ python manage.py shell
-    Python 3.6.4 (default, Sep  3 2018, 13:18:55)
-    [GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
-    Type "help", "copyright", "credits" or "license" for more information.
-    (InteractiveConsole)
-    >>> from django_app.celery import debug_task
-    >>> debug_task.delay()
-    <AsyncResult: 1d2eebe6-320d-459f-a31e-1439810f3fd6>
+```shell
+$ python manage.py shell
+Python 3.6.4 (default, Sep  3 2018, 13:18:55)
+[GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from django_app.celery import debug_task
+>>> debug_task.delay()
+<AsyncResult: 1d2eebe6-320d-459f-a31e-1439810f3fd6>
 
-    >>> from analysis.tasks import sentence_analysis
-    >>> result = sentence_analysis.delay('happy coding')
-    >>> result.get()
-    0.8
-    ```
-
+>>> from analysis.tasks import sentence_analysis
+>>> result = sentence_analysis.delay('happy coding')
+>>> result.get()
+0.8
+```
 
 ## text 감정 분석 api 만들기
 #### 1. api app 만들기 (Text 감정 분석을 위해 외부 Application에서 호출하게 될 api)
-    ```shell
-    $ python manage.py startapp api
-    ```
+```shell
+$ python manage.py startapp api
+```
 
-    ```
-    # 프로젝트 구조
-    kuber-sample-apps
+```
+# 프로젝트 구조
+kuber-sample-apps
+└─── django_app
+    └─── analysis
+    └─── api
     └─── django_app
-        └─── analysis
-        └─── api
-        └─── django_app
-        └─── manage.py
-    ```
+    └─── manage.py
+```
 
-    ```python
-    # django_app/settings.py에 추가
-    INSTALLED_APPS = [ 
-        ... 
-        'api.apps.ApiConfig', 
-    ]
-    ```
+```python
+# django_app/settings.py에 추가
+INSTALLED_APPS = [ 
+    ... 
+    'api.apps.ApiConfig', 
+]
+```
 
     
 #### 2. api 경로 설정
@@ -318,20 +316,20 @@ JDK8과 메이븐이 설치되어 있어야 함
 
 ## 프로젝트 생성
 #### 1. https://start.spring.io/ 에서 Generate Project 후 압축파일 다운로드
-    - Group : com.sa.web
-    - Artifact : sentiment-analysis
-    - Dependencies : Jersey, Web
+- Group : com.sa.web
+- Artifact : sentiment-analysis
+- Dependencies : Jersey, Web
 #### 2. 다운 받은 압축파일 해제한 후 kuber-sample-apps 폴더 밑으로 이동
-    ```
-    # 프로젝트 구조
-    kuber-sample-apps
-    └─── django_app
-    └─── springboot_app
-        └─── src
-        └─── mvnw
-        └─── mvnw.cmd
-        └─── pom.xml
-    ```
+```
+# 프로젝트 구조
+kuber-sample-apps
+└─── django_app
+└─── springboot_app
+    └─── src
+    └─── mvnw
+    └─── mvnw.cmd
+    └─── pom.xml
+```
 
 ## 코드 추가
 - `src > main > java > com > sa > web` 밑에 `dto` 폴더 생성
@@ -609,5 +607,5 @@ $ npm start
 ## 참고자료
 [Learn Kubernetes in Under 3 Hours: A Detailed Guide to Orchestrating Containers](https://medium.freecodecamp.org/learn-kubernetes-in-under-3-hours-a-detailed-guide-to-orchestrating-containers-114ff420e882)  
 [Using Django 2 with Celery and Redis](https://medium.com/@markgituma/using-django-2-with-celery-and-redis-21343284827c)  
-[Kubernetes, Local to Production with Django: 4 - Celery with Redis and Flower](https://medium.com/@markgituma/kubernetes-local-to-production-with-django-4-celery-with-redis-and-flower-df48ab9896b7)
+[Kubernetes, Local to Production with Django: 4 - Celery with Redis and Flower](https://medium.com/@markgituma/kubernetes-local-to-production-with-django-4-celery-with-redis-and-flower-df48ab9896b7)  
 [django REST framework로 간단한 api 만들기](http://jamanbbo.tistory.com/43)
