@@ -142,4 +142,5 @@ Partition이 여러 개일 경우 Producer가 보낸 순서대로 메시지를 �
 [Apache Kafka](https://kafka.apache.org/)  
 [Kafka 운영자가 말하는 처음 접하는 Kafka](https://www.popit.kr/kafka-%EC%9A%B4%EC%98%81%EC%9E%90%EA%B0%80-%EB%A7%90%ED%95%98%EB%8A%94-%EC%B2%98%EC%9D%8C-%EC%A0%91%ED%95%98%EB%8A%94-kafka/)  
 [[Apache Kafka] 1. 소개및 아키텍처 정리](http://epicdevs.com/17)  
+[Kafka & Couchbase Integration Patterns](https://www.slideshare.net/ManuelHurtado1/kafka-couchbase-integration-patterns)  
 [Write An Apache Kafka Custom Partitioner](https://howtoprogram.xyz/2016/06/04/write-apache-kafka-custom-partitioner/)
