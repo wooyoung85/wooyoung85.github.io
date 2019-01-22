@@ -101,6 +101,7 @@
 	```
 
 3. Producer 구현
+
 	```java
 	package com.wooyoung.kafka_demo;
 
@@ -141,6 +142,7 @@
 			for (final String user : users) {
 				final String msg = "Hello " + user;
 				// Topic 설정하여 메세지 Publish
+				// send 메소드에 Callback함수를 인자로 넘길 수 있음
 				producer.send(new ProducerRecord<String, String>(topic, user, msg), new Callback() {
 					public void onCompletion(RecordMetadata metadata, Exception e) {
 						if (e != null) {
