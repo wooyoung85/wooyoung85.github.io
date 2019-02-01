@@ -103,3 +103,7 @@ systemctl disable firewalld
 systemctl disable iptables
 systemctl disable ip6tables
 ```
+
+## 참고자료
+[버추얼박스 네트워크 이해 및 구성-완벽가이드](https://solatech.tistory.com/263)  
+[VirtualBox(버추얼박스) 네트워크 이해 및 완벽 구성 가이드 (버전 1.1)](https://solatech.tistory.com/277)

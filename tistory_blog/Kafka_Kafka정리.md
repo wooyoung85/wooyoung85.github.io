@@ -1,5 +1,5 @@
 > Kafka를 주제로 발표했던 자료 정리한 내용입니다.  
-Custom Partitioner 구현한 예제는 따로 블로깅하도록 하겠습니다 ^^
+[Custom Partitioner 구현한 예제](https://wooyoung85.tistory.com/34)는 따로 블로깅하도록 하겠습니다 ^^
 
 
 # Kafka 소개
