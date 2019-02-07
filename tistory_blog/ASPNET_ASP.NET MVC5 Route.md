@@ -16,7 +16,7 @@ reference : [MSDN - ASP.NET Routing](https://msdn.microsoft.com/en-us/library/cc
 ### **Convention-based Routes**
 
 - `App_Start > RouteConfig.cs` 파일에 라우팅 규칙 추가
-    ```c#
+    ```csharp
     routes.MapRoute(
         “MoviesByReleaseDate”,              // 이름
         “movies/released/{year}/{month}”,   // URL 패턴
@@ -31,7 +31,7 @@ reference : [MSDN - ASP.NET Routing](https://msdn.microsoft.com/en-us/library/cc
 ### **Attribute Routes**
 
 - 모든 라우팅 규칙을 `App_Start > RouteConfig.cs` 파일에 추가하면 가독성이 매우 떨어질 수 있기 때문에 아래와 같이 ActionResult 메서드에 어노테이션을 붙여서 표현할 수 있다.
-    ```c#
+    ```csharp
     [Route(“movies/released/{year}/{month}”)
     public ActionResult MoviesByReleaseDate(int year, int month)
     {
@@ -39,11 +39,11 @@ reference : [MSDN - ASP.NET Routing](https://msdn.microsoft.com/en-us/library/cc
     }
     ```
 - colon(:)을 사용하여 데이터 형식을 제한할 수 있다.  
-    ```c#
+    ```csharp
     [Route(“movies/released/{year}/{month:regex(\\d{2}):range(1,12)}”)]
     ```
 - 반드시 `App_Start > RouteConfig.cs` 에 아래와 같이 추가해서 ActionResult 메서드에 선언한 걸 사용하겠다고 알려줘야 함
-    ```c#
+    ```csharp
     rotes.MapMvcAttributeRoutes();
     ```
 
