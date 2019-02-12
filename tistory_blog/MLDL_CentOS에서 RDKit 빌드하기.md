@@ -95,7 +95,7 @@ $> make install
 
 ## Software Collections 설치 및 활성화
 - Developer Toolset 7<sup>(**)</sup> 설치  
-- [RDKit Document](https://www.rdkit.org/docs/Install.html#building-from-source) 에 g++ v4.8은 사용하지 말라고 되어있어서 7.X대 버전의 GCC를 사용하기 위해 설치하였음
+- RDKit 소스코드가 g++ v4.8에서는 빌드되지 않기 때문에 7.X대 버전의 GCC를 사용하기 위해 Developer Toolset을 설치하였음 ([RDKit Document](https://www.rdkit.org/docs/Install.html#building-from-source) 참고)
     ```shell
     $> yum --enablerepo=extras install centos-release-scl
     $> yum update
@@ -131,7 +131,7 @@ $> make install
 
 ## CMake 설치
 - CMake는 멀티 플랫폼을 위한 빌드 지원 시스템  
-- [RDKit Document](https://www.rdkit.org/docs/Install.html#installing-prerequisites-from-source)에 3.1 버전 이상의 CMake를 사용하여 빌드하라고 나와있음
+- CMake는 3.1 이상 버전을 사용해야 함 ([RDKit Document](https://www.rdkit.org/docs/Install.html#installing-prerequisites-from-source) 참고)
     ```shell
     # 3.10 버전 다운로드
     $> curl -L -O https://cmake.org/files/v3.10/cmake-3.10.2.tar.gz
@@ -144,8 +144,7 @@ $> make install
 
 ## Boost 설치
 - C++ 프로그래밍 언어를 위한 라이브러리들의 집합
-- Boost 1.58 이상 버전을 사용해야 하고, python과 serialization 라이브러리를 포함하는 boost-devel 패키지를 가져야 한다고 나와있음  
-[RDKit Document](https://www.rdkit.org/docs/Install.html#installing-boost) 참고
+- Boost 1.58 이상 버전을 사용해야 하고, python과 serialization 라이브러리를 포함하는 boost-devel 패키지를 가져야 한다고 나와있음 ([RDKit Document](https://www.rdkit.org/docs/Install.html#installing-boost) 참고)
 - 이 Post에서는 Boost 패키지를 다운받는 것이 아니라 소스코드를 직접 빌드함
 
 - Boost 1.65 버전 다운로드
@@ -254,10 +253,31 @@ $> make install
     ```
 
 # Getting Started with the RDKit in Python
-- rdkit import 하기
+- rdkit import 하기  
+(import만 잘 되면 성공~!!)
     ```python
-    >>> from __future__ import print_function
     >>> from rdkit import Chem
+    ```
+- Smiles 코드 다른 형태로 변환하기
+    ```shell
+    >>> m = Chem.MolFromSmiles('C1CCC1')
+    >>> print(Chem.MolToMolBlock(m))    
+
+        RDKit          2D
+
+    4  4  0  0  0  0  0  0  0  0999 V2000
+        1.0607    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    -0.0000   -1.0607    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    -1.0607    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+        0.0000    1.0607    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1  2  1  0
+    2  3  1  0
+    3  4  1  0
+    4  1  1  0
+    M  END
+    
+    >>> from rdkit.Chem import Draw
+    >>> Draw.MolToFile(m,'test1.png')
     ```
 
 ## 참고자료
