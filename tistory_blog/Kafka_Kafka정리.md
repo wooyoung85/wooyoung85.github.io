@@ -43,35 +43,35 @@
 ### Broker 구성하기 (Single)
 
 - 주키퍼 실행  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/zookeeper-server-start.sh kafka_2.11-2.0.0/config/zookeeper.properties
     ```
 - 카프카 실행  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/kafka-server-start.sh kafka_2.11-2.0.0/config/server.properties
     ```
 
 ### Topic 만들기
 
 - Topic 생성  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
     ```
 
 - Topic 리스트 확인  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/kafka-topics.sh --list --zookeeper localhost:2181
     ```
 
 ### Pub-Sub
 
 - 메세지 보내기  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
     ```
 
 - 메세지 가져오기  
-    ```shell
+    ```bash
     $> kafka_2.11-2.0.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
     ```
 

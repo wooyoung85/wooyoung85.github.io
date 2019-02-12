@@ -27,7 +27,7 @@
 - 빠른 빌드를 위해 가상머신의 cpu는 4개로 설정 
 
 ## TL;DR
-```shell
+```bash
 # 기본 Package 설치
 $> yum groupinstall -y "Development Tools"
 $> yum installm -y wget vim eigen3-devel
@@ -96,7 +96,7 @@ $> make install
 ## Software Collections 설치 및 활성화
 - Developer Toolset 7<sup>(**)</sup> 설치  
 - RDKit 소스코드가 g++ v4.8에서는 빌드되지 않기 때문에 7.X대 버전의 GCC를 사용하기 위해 Developer Toolset을 설치하였음 ([RDKit Document](https://www.rdkit.org/docs/Install.html#building-from-source) 참고)
-    ```shell
+    ```bash
     $> yum --enablerepo=extras install centos-release-scl
     $> yum update
     $> yum install -y devtoolset-7
@@ -104,11 +104,11 @@ $> make install
 
 - Python3.6 설치  
 (Python 3.X 버전에서 RDKit 을 사용할 예정임)
-    ```shell
+    ```bash
     $> yum install -y rh-python36 rh-python36-python-devel
     ```
 - Software Collections 활성화
-    ```shell
+    ```bash
     $> scl enable rh-python36 devtoolset-7 bash
 
     $> gcc --version
@@ -121,7 +121,7 @@ $> make install
     Python 3.6.3
     ```
 - Software Collections 비활성화
-    ```shell
+    ```bash
     $> exit
     ```
 
@@ -132,7 +132,7 @@ $> make install
 ## CMake 설치
 - CMake는 멀티 플랫폼을 위한 빌드 지원 시스템  
 - CMake는 3.1 이상 버전을 사용해야 함 ([RDKit Document](https://www.rdkit.org/docs/Install.html#installing-prerequisites-from-source) 참고)
-    ```shell
+    ```bash
     # 3.10 버전 다운로드
     $> curl -L -O https://cmake.org/files/v3.10/cmake-3.10.2.tar.gz
     $> tar -xvzf cmake-3.10.2.tar.gz
@@ -149,23 +149,23 @@ $> make install
 
 - Boost 1.65 버전 다운로드
 
-    ```shell
+    ```bash
     $> curl -L -O https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz
     $> tar -xzvf boost_1_65_1.tar.gz
     ```
 - `bootstrap.sh` 실행  
 (RDKit은 Boost.Python을 활용하여 Python 3.x wrapper 을 만들었기 때문에 `bootstrap.sh` 실행 시 Python 버전과 포함되어야 하는 라이브러리를 아래와 같이 꼭 지정해야 함)
-    ```shell
+    ```bash
     $> cd boost_1_65_1
     $> ./bootstrap.sh --with-python=python3.6 --with-libraries=python,serialization 
     ```
 - `project-config.jam` 파일 수정  
 (Install 시 사용할 Python에 대해 설정해 줌)
-    ```shell
+    ```bash
     $> vim project-config.jam
     ```
 
-    ```shell
+    ```bash
     ...
     import python ;
     if ! [ python.configured ]
@@ -176,29 +176,29 @@ $> make install
     ...
     ```
 - Install
-    ```shell
+    ```bash
     $> ./b2 install
     ```
 - 성공적으로 Install 작업이 완료되면 바이너리 파일이 `/usr/local/lib` 밑으로 떨어짐
 
 ## 환경 변수 설정
 - `.bash_profile` 수정
-    ```shell
+    ```bash
     $> vim ~/.bash_profile
     ```
-    ```shell
+    ```bash
     export BOOST_INCLUDEDIR=/root/boost_1_65_1
     export BOOST_ROOT=/root/boost_1_65_1
     export BOOST_LIBRARYDIR=/root/boost_1_65_1/stage/lib
     ```
 - `.bash_profile` 적용
-    ```shell
+    ```bash
     $> source ~/.bash_profile
     ```
 
 ## RDKit 빌드하기
 - RDKit 다운로드
-    ```shell
+    ```bash
     $> curl -L -O https://github.com/rdkit/rdkit/archive/Release_2018_09_1.tar.gz
     $> tar -xvzf Release_2018_09_1.tar.gz
 
@@ -207,10 +207,10 @@ $> make install
     ```
     
 - RDKit 빌드 관련 환경 변수 설정
-    ```shell
+    ```bash
     $> vim ~/.bash_profile
     ```
-    ```shell
+    ```bash
     RDBASE=/root/RDKit
     ...
     export RDBASE
@@ -219,7 +219,7 @@ $> make install
     export PYTHONPATH=$RDBASE:$PYTHONPATH
     ```
 - RDKit 빌드하기
-    ```shell
+    ```bash
     $> cd RDKit
     $> mkdir build
     $> cd build
@@ -230,7 +230,7 @@ $> make install
 
 ## Python 패키지에 RDKit 추가하기
 - Python 패키지 경로 확인
-    ```shell
+    ```bash
     $> python -m site
     sys.path = [
         '/usr/local/lib',
@@ -248,7 +248,7 @@ $> make install
     ENABLE_USER_SITE: True
     ```
 - rdkit 폴더(빌드 결과물) 복사
-    ```shell
+    ```bash
     $> cp -rf ~/RDKit/rdkit /opt/rh/rh-python36/root/usr/lib64/python3.6/site-packages
     ```
 
@@ -259,7 +259,7 @@ $> make install
     >>> from rdkit import Chem
     ```
 - Smiles 코드 다른 형태로 변환하기
-    ```shell
+    ```bash
     >>> m = Chem.MolFromSmiles('C1CCC1')
     >>> print(Chem.MolToMolBlock(m))    
 

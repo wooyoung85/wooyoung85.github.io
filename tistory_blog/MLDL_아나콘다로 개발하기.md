@@ -13,7 +13,7 @@ Add Anaconda to my PATH environment variable 체크하기
 
 ## 설치 확인 및 업데이트
 
-```
+```bash
 conda --version
 
 conda update conda
@@ -26,26 +26,26 @@ conda update conda
 - "python3"라는 이름의 파이썬 버전3를 사용하는 가상환경을 생성하기
 - 뒤에 `anaconda` 를 붙여서 아나콘다 배포를 구성하는 모든 파이썬 패키지를 포함하도록 conda 환경 구성
 
-```
+```bash
 conda create -n "python3" python=3 anaconda
 ```
 
 ### 가상환경 목록 보기
 
-```
+```bash
 conda env list
 ```
 
 ### 가상환경 활성화 / 비활성화
 
-```
+```bash
 activate <환경명>
 deactivate
 ```
 
 **※ 위 명령어가 실행이 안 될 경우**
 
-```
+```bash
 source activate <환경명>
 source deactivate
 ```
