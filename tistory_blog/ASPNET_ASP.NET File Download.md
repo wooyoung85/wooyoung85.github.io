@@ -66,5 +66,5 @@
         return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, fileName);
     }
     ```
-> ASP.NET MVC 에서 WebForm 방식과 동일하게 (HTTP Response 스트림에 파일을 쓰는 방식) 구현해도 파일 다운로드가 잘 되는 듯 했으나 운영 서버에서 문제가 발생하였다. ㅠ.ㅠ  
+> ASP.NET MVC 에서 WebForm 방식과 동일하게 (HTTP Response 스트림에 파일을 쓰는 방식) 구현해도 파일 다운로드가 잘 되는 듯 했으나 운영 서버에서 문제가 발생하였다. ㅠ.ㅠ<br/><br/>
 MVC 프로젝트에선 FileContentResult를 반환하는 방식으로 구현하는게 맞는 것 같다.
