@@ -43,10 +43,10 @@ Spark을 Local(사용자 PC) Thread에서 실행할 수도 있지만 Cluster 환
 | **Cluster Manager** | 클러스터로부터 리소스를 얻기 위한 외부 서비스 |
 | **Deploy mode** | Driver Process가 실행되는 위치를 구별함<br> **Cluster mode** : Framework이 Cluster 내부에서 Driver를 실행함<br> **Client mode** : 제출자가 Cluster 밖에서 Driver를 실행함 |
 | **Worker Node** | 클러스터에서 응용 프로그램 코드를 실행할 수있는 모든 노드 |
-| **Executor** | Application 실행을 위해 worker node에서 실행되는 프로세스는 작업을 실행하고 데이터를 메모리 또는 디스크 저장소에 저장함<br> 각 어플리케이션은 자신의 executor들을 가짐 |
+| **Executor** | Application 실행을 위해 worker node에서 실행되는 프로세스, task를 실행하고 데이터를 메모리 또는 디스크 저장소에 저장함<br> 각 어플리케이션은 자신의 executor들을 가짐 |
 | **Task** | 하나의 Executor로 보내지게 될 작업 단위 |
 | **Job** | Spark Action(e.g. save, collect)에 의해 생생된 여러 작업으로 이뤄진 병렬 계산 <br>이 용어는 Driver 쪽 log에서 볼 수 있음 |
-| **Stage** | Each job gets divided into smaller sets of tasks called stages that depend on each other (similar to the map and reduce stages in MapReduce); you'll see this term used in the driver's logs. |
+| **Stage** | 각각의 Job은 서로 의존하는 Stage(task들의 집합)들로 나눠짐(MapReduce의 map과 reduce stage들과 유사함)<br> 이 용어는 Driver 쪽 log에서 볼 수 있음 |
 
 ### Standalone Cluster 실행순서
 0. `bin/spark-submit`을 이용하여 Application 제출
@@ -61,5 +61,5 @@ Spark을 Local(사용자 PC) Thread에서 실행할 수도 있지만 Cluster 환
 ## 참고자료
 [Apache Spark™ - Unified Analytics Engine for Big Data](https://spark.apache.org/)  
 [Overview - Spark 2.4.0 Documentation](https://spark.apache.org/docs/latest/index.html)  
-[Understand the Spark Deployment Modes](https://trongkhoanguyen.com/spark/understand-the-spark-deployment-modes/)
-
+[Understand the Spark Deployment Modes](https://trongkhoanguyen.com/spark/understand-the-spark-deployment-modes/)  
+[Jump Start with Apache Spark 2.0 on Databricks](https://www.slideshare.net/julesdamji/jump-start-with-apache-spark-20-on-databricks-70214386)
