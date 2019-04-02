@@ -34,6 +34,12 @@ pyenv install 3.6.4
 pyenv virtualenv 3.6.4 celery
 pyenv activate celery
 ```
+
+# Python Package 설치
+```bash
+(celery) $> pip install celery[redis]
+```
+
 ## Broker 설치
 Celery 공식문서에선 RabbitMQ를 추천하고 있지만 편의상 Redis로 진행하겠습니다.
 
