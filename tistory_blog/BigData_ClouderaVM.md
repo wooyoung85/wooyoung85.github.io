@@ -9,16 +9,16 @@
 
 ## 가상머신 가져오기
 - 파일 > 가상 시스템 가져오기 > 압축해제 한 폴더에서 `cloudera-quickstart-vm-5.13.0-0-virtualbox.ovf` 파일 선택  
-![](./images/BigData/clouderavm1.PNG =400x)
+![](./images/BigData/clouderavm1.PNG)
 
 - Cloudera VM 우클릭 > 설정  
-![](./images/BigData/clouderavm2.PNG =400x)
+![](./images/BigData/clouderavm2.PNG)
 
 - 일반 > 고급 탭 > 클립보드, 드래그 앤 드롭 양방향으로 설정  
-![](./images/BigData/clouderavm3.PNG =600x)
+![](./images/BigData/clouderavm3.PNG)
 
 - 시스템 > 마더보드 > 메모리 설정(여유가 되는만큼 설정)  
-![](./images/BigData/clouderavm4.PNG =600x)
+![](./images/BigData/clouderavm4.PNG)
 
 <hr/>
 
@@ -26,13 +26,14 @@
 <hr/>
 
 - 네트워크 > 어댑터2에 호스트 전용 어댑터 설정
-![](./images/BigData/clouderavm5.PNG =600x)
+![](./images/BigData/clouderavm5.PNG)
     > [Virtual Box를 활용한 Spark 실습 환경 구축](https://wooyoung85.tistory.com/35) Post에 3. VirtualBox 네트워크 구성을 참고해서 **호스트 네트워크를 미리 설정한 후** 어댑터 설정을 해야함
 
 ## Cloudera VM 네트워크 설정
 ```bash
 $> sudo vi /etc/sysconfig/network-scripts/ifcfg-eth1
     ### 아래 내용 입력
+    ### 저는 고정 IP를 192.168.56.120로 설정하였습니다 ^^
     DEVICE=eth1
     TYPE=Ethernet
     IPADDR=192.168.56.120
@@ -54,7 +55,4 @@ $> sudo service NetworkManager start
 ## ssh 접속
 ```bash
 $> ssh cloudera@192.168.56.120
-cloudera@192.168.56.120's password:
-Last login: Mon Apr 15 19:02:09 2019 from 192.168.56.1
-[cloudera@quickstart ~]$
 ```
