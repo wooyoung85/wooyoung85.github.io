@@ -9,7 +9,7 @@
 
 ## 가상머신 가져오기
 - 파일 > 가상 시스템 가져오기 > 압축해제 한 폴더에서 `cloudera-quickstart-vm-5.13.0-0-virtualbox.ovf` 파일 선택  
-![](./images/BigData/clouderavm1.png)
+![](./images/BigData/clouderavm1.png =300x)
 
 - Cloudera VM 우클릭 > 설정  
 ![](./images/BigData/clouderavm2.png)
