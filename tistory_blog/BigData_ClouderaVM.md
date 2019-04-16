@@ -9,16 +9,16 @@
 
 ## 가상머신 가져오기
 - 파일 > 가상 시스템 가져오기 > 압축해제 한 폴더에서 `cloudera-quickstart-vm-5.13.0-0-virtualbox.ovf` 파일 선택  
-![](./images/BigData/clouderavm1.PNG)
+![](./images/BigData/clouderavm1.png)
 
 - Cloudera VM 우클릭 > 설정  
-![](./images/BigData/clouderavm2.PNG)
+![](./images/BigData/clouderavm2.png)
 
 - 일반 > 고급 탭 > 클립보드, 드래그 앤 드롭 양방향으로 설정  
-![](./images/BigData/clouderavm3.PNG)
+![](./images/BigData/clouderavm3.png)
 
 - 시스템 > 마더보드 > 메모리 설정(여유가 되는만큼 설정)  
-![](./images/BigData/clouderavm4.PNG)
+![](./images/BigData/clouderavm4.png)
 
 <hr/>
 
@@ -26,7 +26,7 @@
 <hr/>
 
 - 네트워크 > 어댑터2에 호스트 전용 어댑터 설정
-![](./images/BigData/clouderavm5.PNG)
+![](./images/BigData/clouderavm5.png)
     > [Virtual Box를 활용한 Spark 실습 환경 구축](https://wooyoung85.tistory.com/35) Post에 3. VirtualBox 네트워크 구성을 참고해서 **호스트 네트워크를 미리 설정한 후** 어댑터 설정을 해야함
 
 ## Cloudera VM 네트워크 설정
