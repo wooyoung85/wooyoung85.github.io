@@ -1,13 +1,13 @@
 > [Virtual Box 5.2 Version](https://www.virtualbox.org/wiki/Download_Old_Builds_5_2)을 사용해서 실습 진행하였습니다.
 
-## Cloudera VM 다운로드
+## Cloudera QuickStart VM 다운로드
 - cloudera 사이트 계정이 없다면 회원 가입부터 하는 것을 추천  
 (Cloudera VM 다운로드를 위해선 로그인을 하거나 개인정보 몇가지를 넣어야 함)
 - 아래 URL로 가서 Platform을 Virtual Box로 선택한 후 `GET IT NOW` 버튼을 클릭  
 [https://www.cloudera.com/downloads/quickstart_vms/5-13.html](https://www.cloudera.com/downloads/quickstart_vms/5-13.html)
 - 용량(5.89GB)이 꽤 큰 파일을 다운로드 한 후 압축해제
 
-## 가상머신 가져오기
+## VirtualBox 가상머신 가져오기
 - 파일 > 가상 시스템 가져오기 > 압축해제 한 폴더에서 `cloudera-quickstart-vm-5.13.0-0-virtualbox.ovf` 파일 선택  
 ![](./images/BigData/clouderavm1.png)
 
