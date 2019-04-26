@@ -265,7 +265,7 @@ Cluster들의 설정을 변경할 수 있는 페이지
 
 #### 실행
 ![실행 성공](./images/BigData/cm16.png)
-![ㅅ](./images/BigData/cm17.png)
+![클러스터 설정 완료](./images/BigData/cm17.png)
 
 ## Trouble Shooting
 - cloudera-scm-server 로그 확인
