@@ -6,6 +6,7 @@ It is designed to scale up from single servers to thousands of machines, each of
 
 Rather than rely on hardware to deliver high-availability, the library itself is designed to detect and handle failures at the application layer, so delivering a highly-available service on top of a cluster of computers, each of which may be prone to failures.
 ```
+
 <sup>출처 : [Apache Hadoop](https://hadoop.apache.org/)</sup>
 
 - simple한 프로그래밍 모델을 사용하여 클러스터 컴퓨팅 환경에서 빅 데이터 분산 처리 가능
@@ -24,6 +25,7 @@ Hadoop은 **분산저장(HDFS)** 과 **병렬처리(Yarn, MapReduce)** 를 통�
 
 ## HDFS Architecture (Master/Worker)
 ![HDFS Architecture](./images/BigData/hadoop1.png)
+
 <sup>이미지 출처 : https://www.edureka.co/blog/apache-hadoop-hdfs-architecture/</sup>
 
 Master 역할을 하는 네임노드 서버 한 대와, Worker 역할을 하는 데이터노드 서버가 여러 대로 구성
@@ -54,6 +56,7 @@ The ResourceManager and the NodeManager form the data-computation framework. The
 
 The per-application ApplicationMaster is, in effect, a framework specific library and is tasked with negotiating resources from the ResourceManager and working with the NodeManager(s) to execute and monitor the tasks.
 ```
+
 <sup>출처 : [Apache Hadoop YARN](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html) </sup>
 
 - Hadoop 1.0 시절 MapReduce(ver.1.0)의 `JobTracker`가 혼자 수행했던 역할(resource management와 job scheduling/monitoring)을 분리하려고 만들었음
@@ -65,6 +68,7 @@ The per-application ApplicationMaster is, in effect, a framework specific librar
 
 ## Yarn Architecture
 ![Yarn Architecture](./images/BigData/hadoop2.png)
+
 <sup>이미지 출처 : https://www.edureka.co/blog/hadoop-yarn-tutorial/</sup>
 
 #### ResourceManager
