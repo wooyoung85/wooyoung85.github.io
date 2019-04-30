@@ -1,3 +1,5 @@
+> [Vagrant를 활용하여 Cloudera Manager 설치하기](https://wooyoung85.tistory.com/48) 를 참고해서 설치하는 것을 권장 드립니다 ^^
+
 # Cloudera Manager란?
 **Automated deployment and configuration.**  
 The fastest way to get up and running with Hadoop and Cloudera Enterprise. 
