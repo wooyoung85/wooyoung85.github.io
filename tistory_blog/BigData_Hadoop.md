@@ -1,11 +1,11 @@
 # Hadoop이란?
- ```
+<div style="padding:7px; background-color:lightyellow">
  The Apache Hadoop software library is a framework that allows for the distributed processing of large data sets across clusters of computers using simple programming models.  
 
 It is designed to scale up from single servers to thousands of machines, each offering local computation and storage.  
 
 Rather than rely on hardware to deliver high-availability, the library itself is designed to detect and handle failures at the application layer, so delivering a highly-available service on top of a cluster of computers, each of which may be prone to failures.
-```
+</div>
 
 <sup>출처 : [Apache Hadoop](https://hadoop.apache.org/)</sup>
 
@@ -49,13 +49,13 @@ Master 역할을 하는 네임노드 서버 한 대와, Worker 역할을 하는 
 
 # YARN Framework
 
-```
+<div style="padding:7px; background-color:lightyellow">
 The fundamental idea of YARN is to split up the functionalities of resource management and job scheduling/monitoring into separate daemons. The idea is to have a global ResourceManager (RM) and per-application ApplicationMaster (AM). An application is either a single job or a DAG of jobs.
 
 The ResourceManager and the NodeManager form the data-computation framework. The ResourceManager is the ultimate authority that arbitrates resources among all the applications in the system. The NodeManager is the per-machine framework agent who is responsible for containers, monitoring their resource usage (cpu, memory, disk, network) and reporting the same to the ResourceManager/Scheduler.
 
 The per-application ApplicationMaster is, in effect, a framework specific library and is tasked with negotiating resources from the ResourceManager and working with the NodeManager(s) to execute and monitor the tasks.
-```
+</div>
 
 <sup>출처 : [Apache Hadoop YARN](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html) </sup>
 
@@ -95,9 +95,12 @@ The per-application ApplicationMaster is, in effect, a framework specific librar
 
 
 # MapReduce
-```
+<div style="padding:7px; background-color:lightyellow">
 Hadoop MapReduce is a software framework for easily writing applications which process vast amounts of data (multi-terabyte data-sets) in-parallel on large clusters (thousands of nodes) of commodity hardware in a reliable, fault-tolerant manner.
-```
+</div>
+
+<sup>출처 : [MapReduce Tutorial](https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html) </sup>
+
 - 큰 클러스터 상에 많은 양의 데이터를 병렬로 처리하는 Application을 쉽게 만들 수 있는 소프트웨어 프레임워크
 
 > Hadoop 뿐만 아니라 Hive, Sqoop, Flume 등과 같은 Hadoop Eco System에서도 MapReduce를 활용하여 실제 작업을 수행하기 때문에 MapReduce에 대한 이해가 중요함
@@ -126,7 +129,6 @@ Hadoop MapReduce is a software framework for easily writing applications which p
 
 
 ## 참고자료
-[MapReduce Tutorial](https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)  
 [1-처리 단계 - 빅데이터 - 하둡, 하이브로 시작하기](https://wikidocs.net/22937)  
 [Hadoop Mapper – 4 Steps Learning to MapReduce Mapper](https://data-flair.training/blogs/hadoop-mapper-in-mapreduce/)  
 [3-맵리듀스 - 빅데이터 - 하둡, 하이브로 시작하기](https://wikidocs.net/22827)  
