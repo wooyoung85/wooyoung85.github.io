@@ -59,10 +59,10 @@
 
     genSshKeyScript() {
       rm -rf $HOME/.ssh
-
+  
       echo -ne '\n' | echo -ne '\n' | echo -ne '\n' | ssh-keygen -t rsa
       ls -al ~/.ssh/
-
+  
       # 권한 설정
       sudo chmod 700 ~/.ssh
       sudo chmod 600 ~/.ssh/id_rsa
@@ -70,6 +70,14 @@
     }
 
     agentScript() {
+      sysctl vm.swappiness=10
+      echo "vm.swappiness=10">> /etc/sysctl.conf
+  
+      echo never > /sys/kernel/mm/transparent_hugepage/defrag
+      echo never > /sys/kernel/mm/transparent_hugepage/enabled
+      echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
+      echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
+      
       #selinux 비활성화 
       sed -i 's/^\(SELINUX\s*=\s*\).*$/\1disabled/' /etc/selinux/config
   
@@ -84,7 +92,7 @@
     }
 
     managerScript() {
-      wget -O /etc/yum.repos.d/cloudera-manager.repo https://archive.cloudera.com/cm5/  redhat/6/x86_64/cm/cloudera-manager.repo 
+      wget -O /etc/yum.repos.d/cloudera-manager.repo https://archive.cloudera.com/cm5/redhat/6/x86_64/cm/cloudera-manager.repo 
       
       yum -y update
       yum -y install oracle-j2sdk1.7 cloudera-manager-server cloudera-manager-daemons 
@@ -118,20 +126,33 @@
       echo "$SECURE_MYSQL"
       
       mysql -u root -e "create database scm" mysql
-      mysql -u root -e "grant all on *.* to 'scm'@'%' identified by 'scm' with grant   option;" mysql
+      mysql -u root -e "grant all on *.* to 'scm'@'%' identified by 'scm' with grant option;" mysql
       
       mysql -u root -e "create database metastore" mysql
+      mysql -u root -e "grant all on metastore.* to 'hive'@'%' identified by 'hive' with grant option;" mysql
+  
+      mysql -u root -e "create database hue" mysql
+      mysql -u root -e "grant all on hue.* to 'hue'@'%' identified by 'hue' with grant option;" mysql
+  
+      mysql -u root -e "create database rman" mysql
+      mysql -u root -e "grant all on rman.* to 'rman'@'%' identified by 'rman' with grant option;" mysql
+  
+      mysql -u root -e "create database oozie" mysql
+      mysql -u root -e "grant all on oozie.* to 'oozie'@'%' identified by 'oozie' with grant option;" mysql
       
       # JDBC Driver Install
-      wget https://cdn.mysql.com//Downloads/Connector-J/  mysql-connector-java-5.1.47.tar.gz
+      wget https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java-5.1.47.tar.gz
       tar zxvf mysql-connector-java-5.1.47.tar.gz
       mkdir -p /usr/share/java/
-      cp mysql-connector-java-5.1.47/mysql-connector-java-5.1.47-bin.jar /usr/share/  java/mysql-connector-java.jar
+      cp mysql-connector-java-5.1.47/mysql-connector-java-5.1.47-bin.jar /usr/share/java/.
+      ln -s /usr/share/java/mysql-connector-java-5.1.47-bin.jar /usr/share/java/mysql-connector-java.jar
       
       # Preparing the Cloudera Manager Server Database
       /usr/share/cmf/schema/scm_prepare_database.sh mysql -h localhost scm scm scm
       
       service cloudera-scm-server start
+  
+      tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
     }
 
     wget https://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/s/sshpass-1.06-1.el6.x86_64.rpm
@@ -151,11 +172,11 @@
 
     while [ $x -le $count ]
     do
-    echo "server$x HostName을 입력해 주세요."
-    read hostname
-    array+=($hostname)
-    echo ""
-    x=$(( $x + 1 ))
+      echo "server$x HostName을 입력해 주세요."
+      read hostname
+      array+=($hostname)
+      echo ""
+      x=$(( $x + 1 ))
     done
 
     # IP 정보 입력
@@ -164,25 +185,25 @@
     echo "서버들의 IP를 입력해주세요."
     echo
     for ((i=0;i<${#array[@]};++i)); do
-    echo ${array[i]}" IP 입력해 주세요."
-    read ip
-    array2+=($ip)
-    echo ""
+      echo ${array[i]}" IP 입력해 주세요."
+      read ip
+      array2+=($ip)
+      echo ""
     done
 
     # 입력 정보 Check
     echo
     for ((i=0;i<${#array[@]};++i)); do
-        printf "%s' IP: %s\n" "${array[i]}" "${array2[i]}"
+      printf "%s' IP: %s\n" "${array[i]}" "${array2[i]}"
     done
 
     echo "입력한 정보들이 맞다면 Y(or y)를 눌러주세요."
     read answer
     if [[ $answer != "Y" && $answer != "y" ]]; then
-    echo
-    echo "스크립트를 다시 실행한 후 정확한 정보를 입력하세요."
-    echo
-    exit
+      echo
+      echo "스크립트를 다시 실행한 후 정확한 정보를 입력하세요."
+      echo
+      exit
     fi
 
     # 계정정보 입력
@@ -194,10 +215,10 @@
     echo
 
     if [ $password == "" ]; then
-    echo
-    echo "비밀번호를 입력하지 않으셨습니다. 스크립트를 종료합니다."
-    echo
-    exit
+      echo
+      echo "비밀번호를 입력하지 않으셨습니다. 스크립트를 종료합니다."
+      echo
+      exit
     fi
 
     rm -rf $HOME/.ssh
@@ -205,24 +226,24 @@
     # 1번 서버 /etc/hosts 파일 설정
     echo '127.0.0.1    localhost' > /etc/hosts
     for index in ${!array[*]}; do 
-    echo "${array2[$index]}    ${array[$index]}" >> /etc/hosts
+      echo "${array2[$index]}    ${array[$index]}" >> /etc/hosts
     done
 
     for index in ${!array[*]}; do
-    sshpass -p $password ssh -o StrictHostKeyChecking=no ${array[$index]} "$(typeset -f); genSshKeyScript"
+      sshpass -p $password ssh -o StrictHostKeyChecking=no ${array[$index]} "$(typeset -f); genSshKeyScript"
     done
 
     # 공개 Key 복사
     for index in ${!array[*]}; do
-    sshpass -p $password scp -o StrictHostKeyChecking=no $user@${array[$index]}:.ssh/id_rsa.pub $HOME/id_rsa_${array[$index]}.pub
+      sshpass -p $password scp -o StrictHostKeyChecking=no $user@${array[$index]}:.ssh/id_rsa.pub $HOME/id_rsa_${array[$index]}.pub
     done
 
     for index in ${!array[*]}; do
-    cat $HOME/id_rsa_${array[$index]}.pub >> $HOME/.ssh/authorized_keys
+      cat $HOME/id_rsa_${array[$index]}.pub >> $HOME/.ssh/authorized_keys
     done
 
     for index in ${!array[*]}; do
-    sshpass -p $password scp -o StrictHostKeyChecking=no .ssh/authorized_keys $user@${array[$index]}:.ssh/authorized_keys
+      sshpass -p $password scp -o StrictHostKeyChecking=no .ssh/authorized_keys $user@${array[$index]}:.ssh/authorized_keys
     done
 
     rm -f $HOME/id_rsa*
@@ -230,9 +251,9 @@
 
     # Agent Script 실행
     for index in ${!array[*]}; do
-    ssh ${array[$index]} "sysctl kernel.hostname=${array[$index]}"
-    scp /etc/hosts $user@${array[$index]}:/etc/hosts
-    ssh ${array[$index]} "$(typeset -f); agentScript"
+      ssh ${array[$index]} "sysctl kernel.hostname=${array[$index]}"
+      scp /etc/hosts $user@${array[$index]}:/etc/hosts
+      ssh ${array[$index]} "$(typeset -f); agentScript"
     done
 
 
