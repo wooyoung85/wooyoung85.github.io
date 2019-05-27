@@ -4,7 +4,7 @@
 - VirtualBox와 Vagrant 조합으로 4대의 가상머신을 생성  
   (메모리 여유가 된다면 가상머신을 더 만들어도 됨)
 - `node1` 에 cloudera-manager-server와 cloudera manager용 db(mysql)가 설치될 예정 
-    ```Vagrantfile
+    ```bash
     Vagrant.configure("2") do |config|
 
         # Define base image
