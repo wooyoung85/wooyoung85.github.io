@@ -59,10 +59,10 @@
 
     genSshKeyScript() {
       rm -rf $HOME/.ssh
-  
+
       echo -ne '\n' | echo -ne '\n' | echo -ne '\n' | ssh-keygen -t rsa
       ls -al ~/.ssh/
-  
+
       # 권한 설정
       sudo chmod 700 ~/.ssh
       sudo chmod 600 ~/.ssh/id_rsa
@@ -72,7 +72,7 @@
     agentScript() {
       sysctl vm.swappiness=10
       echo "vm.swappiness=10">> /etc/sysctl.conf
-  
+
       echo never > /sys/kernel/mm/transparent_hugepage/defrag
       echo never > /sys/kernel/mm/transparent_hugepage/enabled
       echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
@@ -80,15 +80,33 @@
       
       #selinux 비활성화 
       sed -i 's/^\(SELINUX\s*=\s*\).*$/\1disabled/' /etc/selinux/config
-  
+
       #NTP 설정
       yum -y install ntp 
       chkconfig ntpd on 
       service ntpd start 
       hwclock --systohc 
-          
+      
+      mv /etc/localtime /etc/localtime_org
+      ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+      date
+
       #방화벽 해제
       chkconfig iptables off
+
+      # training 계정 생성
+      useradd training
+      expect -c "set timeout 5
+      spawn passwd training
+      expect \"New password:\"
+      send \"training\r\"
+      expect \"Retype new password:\"
+      send \"training\r\"
+      expect eof"
+
+      chmod 640 /etc/sudoers
+      echo 'training    ALL=(ALL)    NOPASSWD:ALL' >> /etc/sudoers
+      chmod 440 /etc/sudoers
     }
 
     managerScript() {
@@ -97,6 +115,13 @@
       yum -y update
       yum -y install oracle-j2sdk1.7 cloudera-manager-server cloudera-manager-daemons 
       
+      # MariaDB repo 설정
+      #echo "[mariadb]
+      #name = MariaDB
+      #baseurl = http://yum.mariadb.org/5.5/rhel6-amd64
+      #gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+      #gpgcheck=1" > /etc/yum.repos.d/mariadb.repo
+
       # MY SQL Install
       yum -y install mysql-server mysql
       chkconfig mysqld on
@@ -128,15 +153,15 @@
       mysql -u root -e "create database scm" mysql
       mysql -u root -e "grant all on *.* to 'scm'@'%' identified by 'scm' with grant option;" mysql
       
-      mysql -u root -e "create database metastore" mysql
-      mysql -u root -e "grant all on metastore.* to 'hive'@'%' identified by 'hive' with grant option;" mysql
-  
-      mysql -u root -e "create database hue" mysql
-      mysql -u root -e "grant all on hue.* to 'hue'@'%' identified by 'hue' with grant option;" mysql
-  
       mysql -u root -e "create database rman" mysql
       mysql -u root -e "grant all on rman.* to 'rman'@'%' identified by 'rman' with grant option;" mysql
-  
+
+      mysql -u root -e "create database hue" mysql
+      mysql -u root -e "grant all on hue.* to 'hue'@'%' identified by 'hue' with grant option;" mysql
+
+      mysql -u root -e "create database metastore" mysql
+      mysql -u root -e "grant all on metastore.* to 'hive'@'%' identified by 'hive' with grant option;" mysql
+
       mysql -u root -e "create database oozie" mysql
       mysql -u root -e "grant all on oozie.* to 'oozie'@'%' identified by 'oozie' with grant option;" mysql
       
@@ -151,7 +176,7 @@
       /usr/share/cmf/schema/scm_prepare_database.sh mysql -h localhost scm scm scm
       
       service cloudera-scm-server start
-  
+
       tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
     }
 
@@ -251,9 +276,18 @@
 
     # Agent Script 실행
     for index in ${!array[*]}; do
+      echo "##### agentScript 시작 #####"
+      echo ${array[$index]}
+      ssh ${array[$index]} "hostname ${array[$index]}"
       ssh ${array[$index]} "sysctl kernel.hostname=${array[$index]}"
-      scp /etc/hosts $user@${array[$index]}:/etc/hosts
+      
+      if [ $index != 0 ]; then
+        ssh ${array[$index]} "rm /etc/hosts"
+        scp /etc/hosts $user@${array[$index]}:/etc/hosts
+      fi
       ssh ${array[$index]} "$(typeset -f); agentScript"
+
+      echo "##### agentScript 종료 #####"
     done
 
 
