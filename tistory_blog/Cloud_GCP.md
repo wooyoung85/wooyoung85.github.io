@@ -29,27 +29,37 @@ VM 인스턴스를 생성하려면 프로젝트가 있어야 함
 
     sudo service sshd restart
     ```
-    (**🙉주의사항 : 이 스크립트를 그대로 사용하면 root계정의 비밀번호는 password로 설정됨!!!**)
+    (**🙉주의사항 : 이 스크립트를 그대로 사용하면 root계정의 비밀번호는 password로 설정됨!!! 꼭 바꿔서 사용하세요~~**)
 
 ## VM 인스턴스 생성
+- [Cloud SDK - gcloud compute instances create](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create) 문서에 인스턴스 생성하는 명령어가 아주 자세하게 나와있음
+- 머신유형을 Customizing 하고 부팅 디스크 이미지와 용량을 변경하는 스크립트 예제
+- 머신유형을 Customizing하려면 `machine-type` flag 대신 `custom-cpu` 와 `custom-memory`를 함께 설정해 주어야 함
+    ```bash
+    gcloud compute instances create node1 \
+    --zone=asia-northeast1-a \
+    --custom-cpu=2 \
+    --custom-memory=12 \
+    --image-family=centos-6 \
+    --image-project=centos-cloud  \
+    --boot-disk-size=100GB \
+    --metadata-from-file startup-script=install.sh
+    ```
+- 머신을 동일한 설정으로 여러대 띄우기
+    ```bash
+    gcloud compute instances create node2 node3 node4 node5 \
+    --zone=asia-northeast1-a \
+    --machine-type=n1-standard-1 \
+    --image-family=centos-6 \
+    --image-project=centos-cloud  \
+    --boot-disk-size=100GB \
+    --metadata-from-file startup-script=install.sh
+    ```
 
-```bash
-gcloud compute instances create node2 node3 node4 node5 \
---zone=asia-northeast1-a \
---machine-type=n1-standard-1 \
---image-family=centos-6 \
---image-project=centos-cloud  \
---boot-disk-size=100GB \
---metadata-from-file startup-script=install.sh
-```
+## 방화벽 설정
+- 왼쪽 상단 메뉴에서 `VPC 네트워크 >> 방화벽 규칙` 으로 가면 설정 가능
+  ![](./images/Cloud/3.png)
 
-```bash
-gcloud compute instances create node1 \
---zone=asia-northeast1-a \
---custom-cpu=2 \
---custom-memory=12 \
---image-family=centos-6 \
---image-project=centos-cloud  \
---boot-disk-size=100GB \
---metadata-from-file startup-script=install.sh
-```
+- 필요한 사항을 잘 설정하면 됨  
+  ![](./images/Cloud/4.png)
+    > 소스 IP범위를 `0.0.0.0/0`으로 하면 DDOS 공격의 우려가 있으니 유의하시기 바랍니다 ^^
