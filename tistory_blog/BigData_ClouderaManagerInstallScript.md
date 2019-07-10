@@ -116,16 +116,16 @@
       yum -y install oracle-j2sdk1.7 cloudera-manager-server cloudera-manager-daemons 
       
       # MariaDB repo 설정
-      #echo "[mariadb]
-      #name = MariaDB
-      #baseurl = http://yum.mariadb.org/5.5/rhel6-amd64
-      #gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-      #gpgcheck=1" > /etc/yum.repos.d/mariadb.repo
+      #echo "[mariadb]" > /etc/yum.repos.d/mariadb.repo
+      #echo "name = MariaDB" >> /etc/yum.repos.d/mariadb.repo
+      #echo "baseurl = http://yum.mariadb.org/5.5/rhel6-amd64" >> /etc/yum.repos.d/mariadb.repo
+      #echo "gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB" >> /etc/yum.repos.d/mariadb.repo
+      #echo "gpgcheck=1" >> /etc/yum.repos.d/mariadb.repo
 
       # MY SQL Install
       yum -y install mysql-server mysql
-      chkconfig mysqld on
-      service mysqld start
+      chkconfig mysql on
+      service mysql start
       
       #run mysql_secure_installation
       yum -y install expect
