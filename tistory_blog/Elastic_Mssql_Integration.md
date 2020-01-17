@@ -341,8 +341,8 @@ network.host: 0.0.0.0
     }
     ```
 
-
-
-
-
-
+## 참고문서
+[Getting Started with Free Elasticsearch Security Features](https://youtu.be/nMh1HWWe6B4)  
+[색인 삭제-Elasticsearch 설명서 [5.4]](https://www.elastic.co/guide/kr/elasticsearch/reference/current/gs-delete-index.html)  
+[[logstash] JDBC input plugin](https://peung.tistory.com/13)  
+[Connection refused error on Elastic Search-Stack Overflow](https://stackoverflow.com/questions/31677563/connection-refused-error-on-elastic-search)  
