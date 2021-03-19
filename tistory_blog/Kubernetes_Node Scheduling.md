@@ -184,3 +184,7 @@ spec:
         value: "value1"
         effect: "NoSchedule"
     ```
+
+## 참고자료
+[쿠버네티스 문서 - 노드에 파드 할당하기](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/)  
+[쿠버네티스 문서 - 테인트(Taints)와 톨러레이션(Tolerations)](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/taint-and-toleration/)
