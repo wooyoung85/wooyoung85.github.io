@@ -2,13 +2,32 @@
 
 > 빅데이터 기술에 관심이 있다면 [실무 프로젝트로 배우는 빅데이터 기술](https://wikibook.co.kr/bigdada/) 을 읽어보시길 꼭 추천 드립니다 ^^
 
+<br/>
+<br/>
+
 # 01. Google Cloud Platform으로 작업 환경 구성
 
-- [Google Cloud Platform 사용하기](https://wooyoung85.tistory.com/51)
-- [Cloudera Manager 설치](https://wooyoung85.tistory.com/50)
-- host 설정 (Mac OS 기준)
-  ```
-  $> sudo nano /private/etc/hosts
+- node 로 사용할 VM 생성하기
+
+  - [Google Cloud Platform 사용하기](https://wooyoung85.tistory.com/51)
+
+- Cloudera Manager 설치
+
+  - [Cloudera Manager 설치](https://wooyoung85.tistory.com/47)
+  - [Cloudera Manager 설치 스크립트](https://wooyoung85.tistory.com/50)
+
+- Local PC에서 각 노드에 접속하기 위한 host 파일 설정 (**Mac OS 기준**)
+
+  ```bash
+  # 각 노드(VM) IP 설정
+  $> sudo vi /private/etc/hosts
+  ...
+  35.xxx.xxx.59	  node1
+  35.xxx.xxx.44	  node2
+  34.xxx.xxx.242	node3
+  34.xxx.xxx.76	  node4
+  34.xxx.xxx.102	node5
+
   $> dscacheutil -flushcache
   ```
 
@@ -1800,3 +1819,9 @@
 ## Mahout을 이용한 데이터 마이닝
 
 > Spark ML로 대체
+
+## 참고자료
+
+[실무 프로젝트로 배우는 빅데이터 기술](https://wikibook.co.kr/bigdata/)  
+[『실무 프로젝트로 배우는 빅데이터 기술』 예제 코드](https://github.com/wikibook/bigdata)  
+[실무로 배우는 빅데이터 기술 확장하기](https://www.youtube.com/watch?v=buB_aKPwWfY&list=PLqDU9MvIXrSEWi2ls4P71aFnbp5Vz2Vlx)
