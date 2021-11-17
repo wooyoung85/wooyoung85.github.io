@@ -279,6 +279,7 @@ server {
 
 ## 참고자료
 
-https://www.lesstif.com/system-admin/nginx-ssl-labs-95880245.html
-http://nginx.org/en/docs/http/configuring_https_servers.html#chains
-https://stackoverflow.com/questions/22732045/session-cache-not-detected-in-nginx
+[nginx tls 1.3 enable / php-fpm ( nginx 1.17.8 / php 7.3.14)](https://xinet.kr/?p=2765)  
+[nginx 웹 서버 ssl labs 고득점 받기](https://www.lesstif.com/system-admin/nginx-ssl-labs-95880245.html)  
+[Configuring HTTPS servers - SSL certificate chains](http://nginx.org/en/docs/http/configuring_https_servers.html#chains)  
+[Session cache not detected in nginx](https://stackoverflow.com/questions/22732045/session-cache-not-detected-in-nginx)
