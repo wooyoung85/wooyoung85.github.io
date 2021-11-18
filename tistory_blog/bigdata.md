@@ -36,7 +36,7 @@
 ## 빅데이터 기본 소프트웨어 설치
 
 - HDFS, YARN(MR2 Included), 주키퍼 설치
-  ![빅데이터 기본 소프트웨어 설치](./images/bigdata_practice/1.PNG)
+  ![빅데이터 기본 소프트웨어 설치](./images/bigdata_practice/1.png)
 - 데이터베이스 설정 - Report Manager
 
   | Database 호스트 이름 | 데이터베이스 유형 | 데이터베이스 이름 | 사용자 이름 | 암호 |
@@ -53,7 +53,6 @@
   $> yum install -y git
   $> mkdir git && cd git
   $> git clone https://github.com/wikibook/bigdata
-
   ```
 
 ## Hdfs 명령어 실습
@@ -174,11 +173,11 @@
 - `Kafka > 구성` 에서 `Java Heap Size of Broker` 값 256MB로 설정
 - 서비스 추가 Resume
 
-> ### 🙉 kafka 재시작해도 잘 안될 경우 로그 확인 필요
+> ### <g-emoji>🙉</g-emoji> kafka 재시작해도 잘 안될 경우 로그 확인 필요
 >
 > 아래 에러는 `rm /var/local/kafka/data/meta.properties` 를 통해 해결
 >
-> ```
+> ```bash
 > $> tail /var/log/kafka/kafka-broker-node2.log
 > ...
 > 2019-06-07 14:42:51,360 FATAL kafka.server.KafkaServerStartable: Fatal error during KafkaServerStartable startup. Prepare to shutdown
@@ -187,7 +186,7 @@
 
 ## 역할 구성
 
-![역할구성](./images/bigdata_practice/2.PNG)
+![역할구성](./images/bigdata_practice/2.png)
 
 ## Flume 설정
 
@@ -203,53 +202,49 @@
   SmartCar_Agent.sources  = SmartCarInfo_SpoolSource DriverCarInfo_TailSource
   SmartCar_Agent.channels = SmartCarInfo_Channel DriverCarInfo_Channel
   SmartCar_Agent.sinks    = SmartCarInfo_LoggerSink DriverCarInfo_KafkaSink
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.type = spooldir
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.spoolDir = /home/pilot-pjt/working/car-batch-log
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.deletePolicy = immediate
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.batchSize = 1000
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors = filterInterceptor
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.type = regex_filter
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.regex = ^\\d{14}
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.excludeEvents = false
+
+  SmartCar_Agent.channels.SmartCarInfo_Channel.type = memory
+  SmartCar_Agent.channels.SmartCarInfo_Channel.capacity = 100000
+  SmartCar_Agent.channels.SmartCarInfo_Channel.transactionCapacity = 10000
+
+  SmartCar_Agent.sinks.SmartCarInfo_LoggerSink.type = logger
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.channels = SmartCarInfo_Channel
+  SmartCar_Agent.sinks.SmartCarInfo_LoggerSink.channel = SmartCarInfo_Channel
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.type = exec
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.command = tail -F /home/pilot-pjt/working/driver-realtime-log/SmartCarDriverInfo.log
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.restart = true
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.batchSize = 1000
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors = filterInterceptor2
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.type = regex_filter
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.regex = ^\\d{14}
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.excludeEvents = false
+
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.type = org.apache.flume.sink.kafka.KafkaSink
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.topic = SmartCar-Topic
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.brokerList = node1:9092 node2:9092 node3:9092
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.requiredAcks = 1
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.batchSize = 1000
+
+  SmartCar_Agent.channels.DriverCarInfo_Channel.type = memory
+  SmartCar_Agent.channels.DriverCarInfo_Channel.capacity= 100000
+  SmartCar_Agent.channels.DriverCarInfo_Channel.transactionCapacity = 10000
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.channels = DriverCarInfo_Channel
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.channel = DriverCarInfo_Channel
   ```
-
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.type = spooldir
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.spoolDir = /home/pilot-pjt/working/car-batch-log
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.deletePolicy = immediate
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.batchSize = 1000
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors = filterInterceptor
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.type = regex_filter
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.regex = ^\\d{14}
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.excludeEvents = false
-
-    SmartCar_Agent.channels.SmartCarInfo_Channel.type = memory
-    SmartCar_Agent.channels.SmartCarInfo_Channel.capacity  = 100000
-    SmartCar_Agent.channels.SmartCarInfo_Channel.transactionCapacity  = 10000
-
-
-    SmartCar_Agent.sinks.SmartCarInfo_LoggerSink.type = logger
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.channels = SmartCarInfo_Channel
-    SmartCar_Agent.sinks.SmartCarInfo_LoggerSink.channel = SmartCarInfo_Channel
-
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.type = exec
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.command = tail -F /home/pilot-pjt/working/driver-realtime-log/SmartCarDriverInfo.log
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.restart = true
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.batchSize = 1000
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors = filterInterceptor2
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.type = regex_filter
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.regex = ^\\d{14}
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.excludeEvents = false
-
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.type = org.apache.flume.sink.kafka.KafkaSink
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.topic = SmartCar-Topic
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.brokerList = node1:9092 node2:9092 node3:9092
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.requiredAcks = 1
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.batchSize = 1000
-
-    SmartCar_Agent.channels.DriverCarInfo_Channel.type = memory
-    SmartCar_Agent.channels.DriverCarInfo_Channel.capacity= 100000
-    SmartCar_Agent.channels.DriverCarInfo_Channel.transactionCapacity = 10000
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.channels = DriverCarInfo_Channel
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.channel = DriverCarInfo_Channel
-    ```
 
 ## Kafka 테스트
 
@@ -261,7 +256,6 @@
 
   ```bash
   kafka-topics --list --zookeeper node1:2181 node2:2181 node3:2181
-
   kafka-topics --describe --zookeeper node1:2181 node2:2181 node3:2181 --topic SmartCar-Topic
   ```
 
@@ -275,11 +269,10 @@
   ```
 - Consumer
 
-  ````bash
+  ```bash
   kafka-console-consumer --zookeeper node1:2181 node2:2181 node3:2181 --topic SmartCar-Topic --from-beginning
-
-      kafka-console-consumer --bootstrap-server node1:9092 node2:9092 node3:9092 --topic SmartCar-Topic --from-beginning
-      ```
+  kafka-console-consumer --bootstrap-server node1:9092 node2:9092 node3:9092 --topic SmartCar-Topic --from-beginning
+  ```
 
   > ### 🙉 Topic 안지워질 때 (계속 `SmartCar-Topic - marked for deletion` 이라고 나오고 정작 지워지지는 않음)
   >
@@ -289,7 +282,6 @@
   > [SmartCar-Topic, SmartCar-Topic1, __consumer_offsets]
   > [zk: localhost:2181(CONNECTED) 1] rmr /brokers/topics/SmartCar-Topic
   > ```
-  ````
 
 ## 수집기능 테스트
 
@@ -331,74 +323,71 @@
   SmartCar_Agent.sources  = SmartCarInfo_SpoolSource DriverCarInfo_TailSource
   SmartCar_Agent.channels = SmartCarInfo_Channel DriverCarInfo_Channel
   SmartCar_Agent.sinks    = SmartCarInfo_HdfsSink DriverCarInfo_KafkaSink
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.type = spooldir
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.spoolDir = /home/pilot-pjt/working/car-batch-log
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.deletePolicy = immediate
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.batchSize = 1000
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors = timeInterceptor typeInterceptor collectDayInterceptor filterInterceptor
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.timeInterceptor.type = timestamp
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.timeInterceptor.preserveExisting = true
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.type = static
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.key = logType
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.value = car-batch-log
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.collectDayInterceptor.type = com.wikibook.bigdata.smartcar.flume.CollectDayInterceptor$Builder
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.type = regex_filter
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.regex = ^\\d{14}
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.excludeEvents = false
+
+  SmartCar_Agent.channels.SmartCarInfo_Channel.type = memory
+  SmartCar_Agent.channels.SmartCarInfo_Channel.capacity = 100000
+  SmartCar_Agent.channels.SmartCarInfo_Channel.transactionCapacity = 10000
+
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.type = hdfs
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.path = /pilot-pjt/collect/%{logType}/wrk_date=%Y%m%d
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.filePrefix = %{logType}
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.fileSuffix = .log
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.fileType = DataStream
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.writeFormat = Text
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.batchSize = 10000
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollInterval = 0
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollCount = 0
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.idleTimeout = 100
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.callTimeout = 600000
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollSize = 67108864
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.threadsPoolSize = 10
+
+  SmartCar_Agent.sources.SmartCarInfo_SpoolSource.channels = SmartCarInfo_Channel
+  SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.channel = SmartCarInfo_Channel
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.type = exec
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.command = tail -F /home/pilot-pjt/working/driver-realtime-log/SmartCarDriverInfo.log
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.restart = true
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.batchSize = 1000
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors = filterInterceptor2
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.type = regex_filter
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.regex = ^\\d{14}
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.excludeEvents = false
+
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.type = org.apache.flume.sink.kafka.KafkaSink
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.topic = SmartCar-Topic
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.brokerList = node1:9092 node2:9092 node3:9092
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.requiredAcks = 1
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.batchSize = 1000
+
+  SmartCar_Agent.channels.DriverCarInfo_Channel.type = memory
+  SmartCar_Agent.channels.DriverCarInfo_Channel.capacity= 100000
+  SmartCar_Agent.channels.DriverCarInfo_Channel.transactionCapacity = 10000
+
+  SmartCar_Agent.sources.DriverCarInfo_TailSource.channels = DriverCarInfo_Channel
+  SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.channel = DriverCarInfo_Channel
   ```
-
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.type = spooldir
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.spoolDir = /home/pilot-pjt/working/car-batch-log
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.deletePolicy = immediate
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.batchSize = 1000
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors = timeInterceptor typeInterceptor collectDayInterceptor filterInterceptor
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.timeInterceptor.type = timestamp
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.timeInterceptor.preserveExisting = true
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.type = static
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.key = logType
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.typeInterceptor.value = car-batch-log
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.collectDayInterceptor.type = com.wikibook.bigdata.smartcar.flume.CollectDayInterceptor$Builder
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.type = regex_filter
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.regex = ^\\d{14}
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.interceptors.filterInterceptor.excludeEvents = false
-
-    SmartCar_Agent.channels.SmartCarInfo_Channel.type = memory
-    SmartCar_Agent.channels.SmartCarInfo_Channel.capacity  = 100000
-    SmartCar_Agent.channels.SmartCarInfo_Channel.transactionCapacity  = 10000
-
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.type = hdfs
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.path = /pilot-pjt/collect/%{logType}/wrk_date=%Y%m%d
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.filePrefix = %{logType}
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.fileSuffix = .log
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.fileType = DataStream
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.writeFormat = Text
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.batchSize = 10000
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollInterval = 0
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollCount = 0
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.idleTimeout = 100
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.callTimeout = 600000
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.rollSize = 67108864
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.hdfs.threadsPoolSize = 10
-
-    SmartCar_Agent.sources.SmartCarInfo_SpoolSource.channels = SmartCarInfo_Channel
-    SmartCar_Agent.sinks.SmartCarInfo_HdfsSink.channel = SmartCarInfo_Channel
-
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.type = exec
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.command = tail -F /home/pilot-pjt/working/driver-realtime-log/SmartCarDriverInfo.log
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.restart = true
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.batchSize = 1000
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors = filterInterceptor2
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.type = regex_filter
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.regex = ^\\d{14}
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.interceptors.filterInterceptor2.excludeEvents = false
-
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.type = org.apache.flume.sink.kafka.KafkaSink
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.topic = SmartCar-Topic
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.brokerList = node1:9092 node2:9092 node3:9092
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.requiredAcks = 1
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.batchSize = 1000
-
-    SmartCar_Agent.channels.DriverCarInfo_Channel.type = memory
-    SmartCar_Agent.channels.DriverCarInfo_Channel.capacity= 100000
-    SmartCar_Agent.channels.DriverCarInfo_Channel.transactionCapacity = 10000
-
-    SmartCar_Agent.sources.DriverCarInfo_TailSource.channels = DriverCarInfo_Channel
-    SmartCar_Agent.sinks.DriverCarInfo_KafkaSink.channel = DriverCarInfo_Channel
-    ```
 
 - 사용자 정의 Interceptor 추가
   ```bash
@@ -454,7 +443,7 @@
 ## HBase 설치
 
 - CM에서 HBase 서비스 추가
-  ![](./images/bigdata_practice/3.PNG) > stale deploy 꼭 해야 함
+  ![](./images/bigdata_practice/3.png) > stale deploy 꼭 해야 함
 
 - HBase 설치 확인
 - node1에 root계정으로 접속
@@ -652,30 +641,29 @@
 - column family는 "cf1"을 사용하고 3개의 Region 설정
 - Region에 접근하는 방식은 HexString
 
-  ````bash
-  \$> hbase org.apache.hadoop.hbase.util.RegionSplitter DriverCarInfo HexStringSplit -c 3 -f cf1
+  ```bash
+  $> hbase org.apache.hadoop.hbase.util.RegionSplitter DriverCarInfo HexStringSplit -c 3 -f cf1
 
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:java.io.tmpdir=/tmp
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.name=Linux
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.arch=amd64
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.version=2.6.32-754.14.2.el6.x86_64
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.name=root
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.home=/root
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.dir=/root
-      19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Initiating client connection, connectString=node3:2181,node2:2181,node1:2181 sessionTimeout=60000 watcher=hconnection-0xa29626e0x0, quorum=node3:2181,node2:2181,node1:2181, baseZNode=/hbase
-      19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Opening socket connection to server node1/10.146.0.58:2181. Will not attempt to authenticate using SASL (unknown error)
-      19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Socket connection established, initiating session, client: /10.146.0.58:52026, server: node1/10.146.0.58:2181
-      19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Session establishment complete on server node1/10.146.0.58:2181, sessionid = 0x36b26514f7400ae, negotiated timeout = 60000
-      19/06/05 16:45:07 INFO client.HBaseAdmin: Created DriverCarInfo
-      19/06/05 16:45:07 INFO client.ConnectionManager$HConnectionImplementation: Closing master protocol: MasterService
-      19/06/05 16:45:07 INFO client.ConnectionManager$HConnectionImplementation: Closing zookeeper sessionid=0x36b26514f7400ae
-      19/06/05 16:45:07 INFO zookeeper.ZooKeeper: Session: 0x36b26514f7400ae closed
-      19/06/05 16:45:07 INFO zookeeper.ClientCnxn: EventThread shut down
-      ```
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:java.io.tmpdir=/tmp
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.name=Linux
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.arch=amd64
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:os.version=2.6.32-754.14.2.el6.x86_64
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.name=root
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.home=/root
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Client environment:user.dir=/root
+  19/06/05 16:45:02 INFO zookeeper.ZooKeeper: Initiating client connection, connectString=node3:2181,node2:2181,node1:2181 sessionTimeout=60000 watcher=hconnection-0xa29626e0x0, quorum=node3:2181,node2:2181,node1:2181, baseZNode=/hbase
+  19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Opening socket connection to server node1/10.146.0.58:2181. Will not attempt to authenticate using SASL (unknown error)
+  19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Socket connection established, initiating session, client: /10.146.0.58:52026, server: node1/10.146.0.58:2181
+  19/06/05 16:45:02 INFO zookeeper.ClientCnxn: Session establishment complete on server node1/10.146.0.58:2181, sessionid = 0x36b26514f7400ae, negotiated timeout = 60000
+  19/06/05 16:45:07 INFO client.HBaseAdmin: Created DriverCarInfo
+  19/06/05 16:45:07 INFO client.ConnectionManager$HConnectionImplementation: Closing master protocol: MasterService
+  19/06/05 16:45:07 INFO client.ConnectionManager$HConnectionImplementation: Closing zookeeper sessionid=0x36b26514f7400ae
+  19/06/05 16:45:07 INFO zookeeper.ZooKeeper: Session: 0x36b26514f7400ae closed
+  19/06/05 16:45:07 INFO zookeeper.ClientCnxn: EventThread shut down
+  ```
 
   > region 수를 3으로 하면 Region Server에 Request가 제대로 분배가 안됨 (10으로 늘려보니 분배가 잘되었음 ^^)
-  ````
 
 ## 스톰 Topology 배포
 
@@ -769,15 +757,15 @@
 # 06. 빅데이터 탐색
 
 - hive 설치
-  ![hive 설치](./images/bigdata_practice/4.PNG)
+  ![hive 설치](./images/bigdata_practice/4.png)
 - oozie 설치  
   Dependency : Hbase, HDFS, Hive, YARN, ZooKeeper
-  ![oozie 설치](./images/bigdata_practice/5.PNG)
+  ![oozie 설치](./images/bigdata_practice/5.png)
 - hue 설치
-  ![hue 설치](./images/bigdata_practice/6.PNG)
+  ![hue 설치](./images/bigdata_practice/6.png)
 - Spark 설치  
   Dependency : Hbase, HDFS, YARN, ZooKeeper
-  ![Spark 설치](./images/bigdata_practice/7.PNG)
+  ![Spark 설치](./images/bigdata_practice/7.png)
   > Stale Deploy 꼭 해야함
 
 ## Hue
@@ -957,7 +945,7 @@
   ```
 - 에러 발생
 
-  ```
+  ```bash
       ____              __
       / __/__  ___ _____/ /__
       _\ \/ _ \/ _ `/ __/  '_/
@@ -978,7 +966,7 @@
   ```
 - 에러 발생
 
-  ```
+  ```bash
       ____              __
       / __/__  ___ _____/ /__
       _\ \/ _ \/ _ `/ __/  '_/
@@ -1673,7 +1661,7 @@
 
 ## Impala 설치
 
-![](./images/bigdata_practice/8.PNG)
+![](./images/bigdata_practice/8.png)
 
 - Impala 서비스 추가 후 `CM 홈 > Hue > 구성` 화면에서 Impala 서비스 항목을 Impala로 선택
 - Hue Stale Deploy
@@ -1681,7 +1669,7 @@
 
 ## Sqoop 설치
 
-![](./images/bigdata_practice/9.PNG)
+![](./images/bigdata_practice/9.png)
 
 ## Zeppelin 설치
 

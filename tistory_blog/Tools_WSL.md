@@ -1,12 +1,14 @@
 # WSL이란?
+
 - 리눅스용 윈도우 하위 시스템(Windows Subsystem for Linux, `WSL`)
 
 # WSL 설치
 
 ## WSL2 로 업그레이드
+
 - Window Update 설치
 - WSL2 활성화 명령어 실행
-  ```ps
+  ```shell
   # WSL feature Enable
   ps> dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
   # Virtual Machine Platform feature Enable
@@ -18,13 +20,16 @@
 - Microsoft Store 에서 Ubuntu 검색 후 설치
 - `Ubuntu App`으로 실행할 수 있음
 - Ubuntu 에 `root` 계정 설정
+
   ```bash
   $> sudo passwd root
   ```
 
 - `root` 계정을 기본 사용자로 설정 (필수는 아님!!)
+
   > `PowerShell` 실행 후 아래 명령 실행
-  ```ps
+
+  ```shell
   ps> ubuntu config --default-user root
 
   # Ubuntu 세부 버전 지정해서 설치했다면
@@ -32,17 +37,18 @@
   ```
 
 ## WSL 여러개 설치 (**이 방법을 추천!!!**)
+
 > WSL을 여려개 설치할 경우 기본 사용자에 대한 설정이 필요함
 
 - WSL 배포판 다운로드 [🚀 Link](https://docs.microsoft.com/ko-kr/windows/wsl/install-manual#downloading-distributions)
 - 다운받은`appx` 파일을 `zip` 파일로 변경 후 압축해제  
   (Ubuntu_2004.2020.424.0_x64.appx 👉 Ubuntu_2004.2020.424.0_x64.zip)
 - WSL 관리 폴더 생성
-  ```ps
+  ```shell
   ps> mkdir -p E:\WSL\DATA
   ```
 - Import & Distribution
-  ```ps
+  ```shell
   # wsl --import <배포> <설치 위치> <파일 이름>
   ps> wsl --import Ubuntu-1 E:\WSL\DATA\Ubuntu-1 E:\Ubuntu_2004.2020.424.0_x64\install.tar.gz
   # Ubuntu 실행
@@ -61,12 +67,13 @@
   $> exit
   ```
 - WSL 재부팅
-  ```ps
+
+  ```shell
   ps> wsl -t Ubuntu-1
   ```
 
 - WSL 관련 명령어
-  ```ps
+  ```shell
   # WSL 버전 확인 (전부 버전 2 로 확인되면 아래 내용은 Pass!)
   ps> wsl --list --verbose
   # Ubuntu Wsl 버전 변경
@@ -80,8 +87,11 @@
   ```
 
 # Ubuntu 사용
+
 ## Ubuntu 환경 설정
+
 - Ubuntu 기본 쉘 변경 (`dash` 👉 `bash`)
+
   ```bash
   # 아래 명령어 입력 후 나오는 화면에서 No 라고 답변
   $> sudo dpkg-reconfigure dash
@@ -91,6 +101,7 @@
   ```
 
 - apt 주소 변경 (가장 가까운 서버에 접근하도록)
+
   ```bash
   sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
   sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
@@ -103,7 +114,9 @@
   ```
 
 ## bash 설정
+
 - Oh-my-zsh
+
   ```bash
   $> sudo apt-get install -y zsh
   $> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -126,7 +139,6 @@
   $> git clone https://github.com/black7375/BlaCk-Void-Zsh.git ~/.zsh
   $> bash ~/.zsh/BlaCk-Void-Zsh.sh
   ```
-  
 - Font Install 은 [0,1,2] 중 0 입력, 비밀번호 입력 필요
 - Windows Terminal 다시 실행
 - `zsh-notify: unsupported environment` 에러 관련하여 `~/.zsh/BlaCk-Void.zshrc` 파일 수정
@@ -139,9 +151,12 @@
   ```
 
 # WSL 네트워크
+
 ## 네트워크 구성
+
 - Host PC
-  ```ps
+
+  ```shell
   PS C:\Users\wooyoung> ipconfig
   ...
   이더넷 어댑터 vEthernet (WSL):
@@ -152,6 +167,7 @@
     서브넷 마스크 . . . . . . . : 255.255.240.0
     기본 게이트웨이 . . . . . . :
   ```
+
 - WSL
   ```bash
   $> ifconfig
@@ -166,12 +182,15 @@
   ```
 
 ## 네트워크 특징
+
 - (Host => WSL) WSL 에서 `8080` 포트로 웹서비스를 실행하면 Host PC에서 `localhost:8080` 으로 접근 가능
 - (WSL => Host) Host에서 `3306` 포트로 DB가 실행 중이라면 WSL에서 `172.29.176.1:3306` 으로 접근 가능
 
 ## WSL 외부 네트워크와 연결하기
+
 - Host PC에 포트 포워딩 설정 추가
-  ```ps
+
+  ```shell
   PS C:\Users\wooyoung> netsh interface portproxy add v4tov4 listenport=15021 listenaddress=0.0.0.0 connectport=21 connectaddress=172.29.191.98
   # 포트포워딩 설정 확인
   PS C:\Users\wooyoung> netsh interface portproxy show v4tov4
@@ -186,6 +205,7 @@
   ```
 
 ## 참고자료
+
 [Linux용 Windows 하위 시스템 설명서](https://docs.microsoft.com/ko-kr/windows/wsl/)  
 [ZSH 설정 소개](https://black7375.tistory.com/59)  
 [WSL 2의 네트워크 통신 방법](https://www.sysnet.pe.kr/2/0/12347)

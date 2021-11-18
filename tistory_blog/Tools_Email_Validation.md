@@ -1,28 +1,32 @@
 > 직접 구현에 대한 내용은 이렇게 동작하는구나 참고만 하시고  
-> 유료 서비스나 일정양을 무료로 제공하는 서비스를 잘 찾아서 사용하시기 바랍니다.  
+> 유료 서비스나 일정양을 무료로 제공하는 서비스를 잘 찾아서 사용하시기 바랍니다.
 
 # 이메일 유효성 검증
+
 1. 직접 구현
 2. Online Email Validators 혹은 라이브러리 사용
 
 ## 1. 직접 구현
-> `구문 검증` 👉 `DNS 조회` 👉 `Email Box 통신 확인` 순으로 진행
 
-> 🚫 메일회사 정책에 따라 DNS 조회나 Email Box 통신 확인이 정상적으로 작동하지 않을 수 있고,  
-> 👩‍💻 반복적으로 여러번 시도할 경우 해킹 시도로 오해받을 수 있으니 주의하시기 바랍니다.
+> `구문 검증` <g-emoji>👉</g-emoji> `DNS 조회` <g-emoji>👉</g-emoji> `Email Box 통신 확인` 순으로 진행
+
+> <g-emoji>🚫</g-emoji> 메일회사 정책에 따라 DNS 조회나 Email Box 통신 확인이 정상적으로 작동하지 않을 수 있고,  
+> <g-emoji>👩‍💻</g-emoji> 반복적으로 여러번 시도할 경우 해킹 시도로 오해받을 수 있으니 주의하시기 바랍니다.
 
 ### 구문 검증
+
 - Javascript 정규식을 통해 처리 가능
 - RFC 2822 standard email validation  
   https://www.w3resource.com/javascript/form/email-validation.php
-    ```js
-    function validateEmail(email) {
-        const re = "정규식추가";
-        return re.test(String(email).toLowerCase());
-    }
-    ```
+  ```js
+  function validateEmail(email) {
+    const re = "정규식추가";
+    return re.test(String(email).toLowerCase());
+  }
+  ```
 
 ### DNS 조회
+
 ```bash
 $> nslookup -type=mx gmail.com
 Server:         172.29.128.1
@@ -59,6 +63,7 @@ Authoritative answers can be found from:
 ```
 
 ### Email Box 통신 확인
+
 ```bash
 $> telnet gmail-smtp-in.l.google.com 25
 Trying 74.125.23.26...
@@ -95,10 +100,12 @@ Connection closed by foreign host.
 ## 2. Online Email Validators 혹은 라이브러리 사용
 
 ### Online Email Validators : ClearOut
+
 - https://app.clearout.io/
 - 비용 지불 방식 ([📑 링크](https://app.clearout.io/dashboard/account/pricing))
 
 ### 라이브러리 : check-if-email-exists
+
 - Repository : https://github.com/reacherhq/check-if-email-exists
 - Live Demo : https://reacher.email/
 - Docker 로 사용 가능
@@ -116,13 +123,7 @@ Connection closed by foreign host.
     },
     "mx": {
       "accepts_mail": true,
-      "records": [
-        "alt3.gmail-smtp-in.l.google.com.",
-        "alt1.gmail-smtp-in.l.google.com.",
-        "alt4.gmail-smtp-in.l.google.com.",
-        "alt2.gmail-smtp-in.l.google.com.",
-        "gmail-smtp-in.l.google.com."
-      ]
+      "records": ["alt3.gmail-smtp-in.l.google.com.", "alt1.gmail-smtp-in.l.google.com.", "alt4.gmail-smtp-in.l.google.com.", "alt2.gmail-smtp-in.l.google.com.", "gmail-smtp-in.l.google.com."]
     },
     "smtp": {
       "can_connect_smtp": true,
