@@ -80,7 +80,7 @@ $$
 
 ## 임시테이블 생성
 
-```postgresql
+```sql
 DROP TABLE IF EXISTS temp_table;
 CREATE TEMP TABLE temp_table as
 SELECT * FROM origin_table
