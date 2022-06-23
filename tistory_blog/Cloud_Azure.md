@@ -80,8 +80,6 @@ $> az group delete --name $RESOURCE_GROUP
 
 ## 참고자료
 
-https://docs.microsoft.com/ko-kr/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
-
-https://docs.microsoft.com/ko-kr/cli/azure/query-azure-cli
-
-https://docs.microsoft.com/ko-kr/cli/azure/vm?view=azure-cli-latest
+[Azure 모범사례 - 명명 규칙 정의](https://docs.microsoft.com/ko-kr/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)  
+[JMESPath 쿼리를 사용하여 Azure CLI 명령 출력을 쿼리하는 방법](https://docs.microsoft.com/ko-kr/cli/azure/query-azure-cli)  
+[Azure CLI - az vm](https://docs.microsoft.com/ko-kr/cli/azure/vm?view=azure-cli-latest)
