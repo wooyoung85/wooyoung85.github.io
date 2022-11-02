@@ -224,5 +224,5 @@ $> az group delete --name woodong-rg
 
 ## 참고자료
 
-[Azure Command-Line Interface (CLI) documentation](https://learn.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
+[Azure Command-Line Interface (CLI) documentation](https://learn.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)  
 [CLI를 사용하여 Azure Database for MariaDB의 프라이빗 링크 만들기 및 관리](https://learn.microsoft.com/ko-kr/azure/mariadb/howto-configure-privatelink-cli)
