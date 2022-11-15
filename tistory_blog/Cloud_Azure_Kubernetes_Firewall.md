@@ -1,7 +1,17 @@
 # Prerequisite
 
-- [Azure Cloud 사용하기](https://wooyoung85.tistory.com/75) 참고
-- https://helm.sh/docs/intro/install/
+- Azure Cli Login
+
+  ```bash
+  SUBSCRIPTION=<구독 ID>
+
+  az login
+  az account set --subscription $SUBSCRIPTION
+  ```
+
+- helm Install 👉 https://helm.sh/docs/intro/install/
+
+> [Azure Cloud 사용하기](https://wooyoung85.tistory.com/75) 참고
 
 # 리소스 그룹 생성
 
@@ -9,7 +19,7 @@
 az group create --name woodong-rg --location koreacentral
 ```
 
-# Azure Kubernetes
+# Azure Kubernetes Service
 
 ```bash
 # 가상 네트워크 생성
@@ -20,8 +30,8 @@ az network vnet create \
  --subnet-name woodong-aks-subnet \
  --subnet-prefix 10.20.1.0/24
 
-SUBNET_ID=$(az network vnet subnet show --resource-group woodong-rg --vnet-name woodong-aks-vnet --name woodong-aks-subnet --query id -o tsv)
-echo $SUBNET_ID
+AKS_SUBNET_ID=$(az network vnet subnet show --resource-group woodong-rg --vnet-name woodong-aks-vnet --name woodong-aks-subnet --query id -o tsv)
+echo $AKS_SUBNET_ID
 
 # Azure Kubernetes Cluster 생성
 az aks create  -y \
@@ -31,7 +41,7 @@ az aks create  -y \
   --nodepool-name aksnodepool \
   --node-count 1 \
   --node-vm-size Standard_B2s \
-  --vnet-subnet-id $SUBNET_ID
+  --vnet-subnet-id $AKS_SUBNET_ID
 
 AKS_PRINCIPAL_ID=$(az aks show --name woodong-aks --resource-group woodong-rg --query identity.principalId -o tsv)
 VNET_ID=$(az network vnet show --resource-group woodong-rg --name woodong-aks-vnet --query id -o tsv)
