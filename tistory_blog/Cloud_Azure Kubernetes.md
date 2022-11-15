@@ -54,12 +54,11 @@ az acr login --name $ACR_NAME
 ```bash
 SOURCE_REGISTRY=registry.k8s.io
 CONTROLLER_IMAGE=ingress-nginx/controller
-CONTROLLER_TAG=v1.3.0
+CONTROLLER_TAG=v1.0.4
 PATCH_IMAGE=ingress-nginx/kube-webhook-certgen
-PATCH_TAG=v1.3.0
+PATCH_TAG=v1.1.1
 DEFAULTBACKEND_IMAGE=defaultbackend-amd64
 DEFAULTBACKEND_TAG=1.5
-
 
 # Ingress Controller 생성 시 필요한 이미지 ACR에 Import
 az acr import --name $ACR_NAME --source $SOURCE_REGISTRY/$CONTROLLER_IMAGE:$CONTROLLER_TAG --image $CONTROLLER_IMAGE:$CONTROLLER_TAG
@@ -67,7 +66,8 @@ az acr import --name $ACR_NAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATCH_TAG
 az acr import --name $ACR_NAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
 
 # Add the ingress-nginx repository
-# helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 ```
 
 ```bash
@@ -89,7 +89,8 @@ echo $PUB_IP
 # NGINX Ingress Controller 배포
 helm install nginx-ingress ingress-nginx/ingress-nginx \
     --version 4.0.13 \
-    --set controller.replicaCount=2 \
+    --set controller.ingressClassResource.name=nginx \
+    --set controller.replicaCount=1 \
     --set controller.nodeSelector."kubernetes\.io/os"=linux \
     --set controller.image.registry=$ACR_URL \
     --set controller.image.image=$CONTROLLER_IMAGE \
@@ -111,6 +112,8 @@ helm install nginx-ingress ingress-nginx/ingress-nginx \
 ```
 
 > kubernetes-announce 그룹에서 공지한 내용을 보면 Kubernetes 의 Container Registry 를 `k8s.gcr.io` 에서 `registry.k8s.io` 로 바꿨다고 하였음 (https://groups.google.com/g/kubernetes-announce/c/LQki8n9ZxCo/m/gYeQ0adTAgAJ)
+
+> `Helm Chart` : https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx/4.0.13
 
 > [NGINX Ingress Controller 배포를 위해 사용한 이미지 저장소]  
 > `ingress-nginx/controller` : https://console.cloud.google.com/gcr/images/k8s-artifacts-prod/us/ingress-nginx/controller  

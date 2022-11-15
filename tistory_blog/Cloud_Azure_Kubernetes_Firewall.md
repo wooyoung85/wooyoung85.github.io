@@ -5,6 +5,7 @@
   ```bash
   SUBSCRIPTION=<구독 ID>
 
+  az upgrade
   az login
   az account set --subscription $SUBSCRIPTION
   ```
@@ -124,27 +125,7 @@ az network firewall application-rule create \
       'ntp.ubuntu.com' \
       'packages.microsoft.com' \
       'acs-mirror.azureedge.net'
-
-# Add a dnat rule to azure firewall
-FW_PIP=$(az network public-ip show -g woodong-rg -n woodong-pip --query "ipAddress" -o tsv)
-echo $FW_PIP
-
-az network firewall nat-rule create \
---collection-name 'aks-natrule' \
---destination-addresses $FW_PIP \
---destination-ports 80 \
---firewall-name woodong-fw \
---name inboundrule \
---protocols Any \
---resource-group woodong-rg \
---source-addresses "*" \
---translated-port 80 \
---action Dnat \
---priority 100 \
---translated-address $ING_EXTERNAL_IP
 ```
-
----
 
 # 가상 네트워크 연결 (AKS 🔛 Firewall)
 
@@ -185,7 +166,6 @@ az network route-table route create \
   --next-hop-ip-address $FW_PRIVATE_IP \
   --address-prefix "0.0.0.0/0"
 
-
 # Associate the route table to AKS
 az network vnet subnet update \
   --resource-group woodong-rg \
@@ -199,22 +179,42 @@ az network vnet subnet update \
 ```bash
 az aks get-credentials -g woodong-rg -n woodong-aks
 
-helm install nginx-ingress \
-ingress-nginx/ingress-nginx \
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm install nginx-ingress ingress-nginx/ingress-nginx \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"="true" \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal-subnet"="woodong-aks-subnet" \
 --set controller.replicaCount=1 \
 --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux \
 --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux
 
-$ kubectl get svc
-NAME                                               TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
-kubernetes                                         ClusterIP      10.0.0.1       <none>        443/TCP                      105m
-nginx-ingress-ingress-nginx-controller             LoadBalancer   10.0.171.200   10.20.1.33    80:31358/TCP,443:31220/TCP   47s
-nginx-ingress-ingress-nginx-controller-admission   ClusterIP      10.0.103.72    <none>        443/TCP                      47s
+# EXTERNAL-IP가 할당될 떄까지 모니터링
+kubectl get svc nginx-ingress-ingress-nginx-controller -w
 
 ING_EXTERNAL_IP=$(kubectl get svc nginx-ingress-ingress-nginx-controller -o custom-columns="EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" | grep "\.")
 echo $ING_EXTERNAL_IP
+```
+
+# Azure Firewall 에 DNat Rule 추가
+
+```bash
+FW_PIP=$(az network public-ip show -g woodong-rg -n woodong-pip --query "ipAddress" -o tsv)
+echo $FW_PIP
+
+az network firewall nat-rule create \
+--collection-name 'aks-natrule' \
+--destination-addresses $FW_PIP \
+--destination-ports 80 \
+--firewall-name woodong-fw \
+--name inboundrule \
+--protocols Any \
+--resource-group woodong-rg \
+--source-addresses "*" \
+--translated-port 80 \
+--action Dnat \
+--priority 100 \
+--translated-address $ING_EXTERNAL_IP
 ```
 
 # Web Application 배포
