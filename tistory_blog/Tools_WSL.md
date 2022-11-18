@@ -55,6 +55,7 @@
   ps> wsl --distribution Ubuntu-1
   ```
 - Ubuntu 사용자 추가
+
   ```bash
   # 패스워드 설정 후 기본 정보 입력은 그냥 엔터 누르면 됨
   $> adduser wooyoung
@@ -66,6 +67,7 @@
   EOF
   $> exit
   ```
+
 - WSL 재부팅
 
   ```shell
@@ -88,6 +90,18 @@
 
 # Ubuntu 사용
 
+## WSL 실행
+
+- Windows Terminal 로 실행 (**이 방법을 추천!!!**)
+
+  <img src="./images/Tools/wsl-windows-terminal.png" width="500">
+
+- Powershell 에서 실행하기
+
+  ```shell
+  ps> wsl -d Ubuntu-1 -u wooyoung --cd ~
+  ```
+
 ## Ubuntu 환경 설정
 
 - Ubuntu 기본 쉘 변경 (`dash` 👉 `bash`)
@@ -100,11 +114,13 @@
   lrwxrwxrwx 1 root root 4 Jun 18 12:41 /bin/sh -> bash
   ```
 
+  <img src="./images/Tools/wsl-shell-change.png" width="640">
+
 - apt 주소 변경 (가장 가까운 서버에 접근하도록)
 
   ```bash
-  sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
-  sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
+  $> sudo sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
+  $> sudo sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
   ```
 
 - 패키지 정보 업데이트 및 설치된 패키지 최신화
@@ -113,42 +129,29 @@
   $> sudo apt-get -y full-upgrade
   ```
 
-## bash 설정
+## zsh 설정
 
-- Oh-my-zsh
+- zsh 설치
 
   ```bash
   $> sudo apt-get install -y zsh
-  $> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  $> git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
-  $> sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k/powerlevel10k"/g' ~/.zshrc
-  $> git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  $> git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  $> sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
-  $> cat <<EOT >> ~/.zshrc
-  prompt_context() {
-    if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-      prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
-    fi
-  }
-  EOT
   ```
 
-- BlaCk-Void-Zsh 사용 (설치 중 문제가 발생하여 del 키가 안먹는 현상 발생 ㅠ)
+- `Oh-my-zsh`
+
   ```bash
-  $> git clone https://github.com/black7375/BlaCk-Void-Zsh.git ~/.zsh
-  $> bash ~/.zsh/BlaCk-Void-Zsh.sh
+  # Oh My Zsh 설치
+  $> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # powerlevel10k 테마 설정
+  $> git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
+  $> sed -i 's/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/g' ~/.zshrc
+  $> exec zsh
   ```
-- Font Install 은 [0,1,2] 중 0 입력, 비밀번호 입력 필요
-- Windows Terminal 다시 실행
-- `zsh-notify: unsupported environment` 에러 관련하여 `~/.zsh/BlaCk-Void.zshrc` 파일 수정
-  ```bash
-  if [[ $WSL_ENABLE ]]; then
-  if  [[ ! (( "$OSTYPE" == "linux-gnu" && $(uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/ip') )) ]]; then
-    zplugin ice wait"2" atload"_zsh-notify-setting" lucid
-    zplugin light marzocchi/zsh-notify
-  fi
-  ```
+
+- Font 깨짐
+
+  - https://www.nerdfonts.com/font-downloads 에서 원하는 폰트 다운로드 후 Windows Terminal 에 폰트 설정
+  - `JetBrainsMono Nerd Font` 추천
 
 # WSL 네트워크
 
