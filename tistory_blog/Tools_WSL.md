@@ -14,6 +14,8 @@
   # Virtual Machine Platform feature Enable
   ps> dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
   ```
+  
+  > 재부팅 필수!!!
 
 ## WSL 기본 설치 방법
 
@@ -119,8 +121,8 @@
 - apt 주소 변경 (가장 가까운 서버에 접근하도록)
 
   ```bash
-  $> sudo sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
-  $> sudo sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
+  $> sudo sed -i 's/archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
+  $> sudo sed -i 's/security.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
   ```
 
 - 패키지 정보 업데이트 및 설치된 패키지 최신화
@@ -150,7 +152,7 @@
 
 - Font 깨짐
 
-  - https://www.nerdfonts.com/font-downloads 에서 원하는 폰트 다운로드 후 Windows Terminal 에 폰트 설정
+  - [https://www.nerdfonts.com/font-downloads](https://www.nerdfonts.com/font-downloads) 에서 원하는 폰트 다운로드 후 Windows Terminal 에 폰트 설정
   - `JetBrainsMono Nerd Font` 추천
 
 # WSL 네트워크

@@ -143,7 +143,7 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 - ping 테스트
 
   ```bash
-  ansible k8s -i ~/gcp.inv -m ping --private-key=~/.ssh/gcp_rsa
+  ansible k8s -i ~/k8s-ansible/gcp.inv -m ping --private-key=~/.ssh/gcp_rsa  
   ```
 
 ## Prerequisite
@@ -410,6 +410,8 @@ ansible-playbook -i ~/k8s-ansible/gcp.inv ~/k8s-ansible/install-calico-network-p
 ## Join Worker Node
 
 ```bash
+# ansible 명령 실행 시 잠시 sudo 권한 부여
+sudo ansible --version
 vi ~/k8s-ansible/join-worker-node.yaml
 ansible-playbook -i ~/k8s-ansible/gcp.inv ~/k8s-ansible/join-worker-node.yaml --private-key=~/.ssh/gcp_rsa
 ```
