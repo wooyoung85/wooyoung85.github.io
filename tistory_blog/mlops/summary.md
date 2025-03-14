@@ -26,16 +26,23 @@
 ### GCP
 
 <a href="https://wooyoung85.tistory.com/88" target="_blank">MLOps 실습환경 구축 - GCP</a>  
-<a href="https://wooyoung85.tistory.com/87" target="_blank">MLOps 실습환경 구축 - GCP (with. Terraform)</a>
+<a href="https://wooyoung85.tistory.com/87" target="_blank">MLOps 실습환경 구축 - GCP (with. Terraform)</a> 🗸
 
 ## 목차
 
 > 🔉 내용 정리되는대로 업데이트 할 예정입니다.
 
 ### 1. Kubernetes Cluster Install
-- 1-1. [K8S Node Pre Install (Online)](https://wooyoung85.tistory.com/89)
+① <a href="https://wooyoung85.tistory.com/89" target="_blank">K8S Node Pre Install (Online)</a> 🗸   
+② <a href="https://wooyoung85.tistory.com/90" target="_blank">K8S Install</a> 🗸   
+③ <a href="https://wooyoung85.tistory.com/91" target="_blank">K8S Node Pre Install (Offline)</a>    
+④ <a href="https://wooyoung85.tistory.com/92" target="_blank">K8S Node GPU Driver Install</a>    
+⑤ <a href="https://wooyoung85.tistory.com/93" target="_blank">Nvidia Device Plugin Install</a>    
+⑥ <a href="https://wooyoung85.tistory.com/94" target="_blank">Kubeflow Install in Kind Cluster</a>  <span style="font-size:10px;">🙋‍♂️ Kind 를 활용한 kubeflow 설치 테스트</span>
 
 ### 2. Kubeflow Install
+
+
 
 ### 3. Supporting System Install
 
